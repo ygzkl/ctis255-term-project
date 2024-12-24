@@ -4,8 +4,56 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>2024 - Fall - Project</title>
-</head>
-<body>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     
+    <script src="script.js"></script>
+</head>
+
+
+
+<body>
+
+    <!-- Initial Page --> 
+    <div id="initial-page">
+        <div class="header-bar">
+            <div class="header-left">
+                <span class="site-title">CTIS <span>Crypto Trading Information System</span></span>
+            </div>
+        </div>
+
+
+        <div class="team-members-page">
+            <h2>Team Members</h2>
+            <ul>
+                <li>Hasan Hüseyin Balbıçak</li>
+                <li>Efe Baran Durmaz</li>
+                <li>Yağız Emir Kula</li>
+                <li>Muhammed Talha Nalbant</li>
+            </ul>
+          <button id="continue-to-profiles">Continue</button>
+        </div>
+        
+        <!-- Profile Selection Page -->
+    <div class="profile-page hidden">
+        <div class="profile-list">
+            
+        </div>
+
+        <div id = "add-box">
+            <h4>New Profile</h4>
+            <input type="text" id="new-profile-name" placeholder="Enter new profile..." >
+            <br>
+            <button id="add-profile-btn">Add</button>
+        </div>
+
+        <button id="new-profile-btn">New Profile</button>
+    </div>
+
+
+    </div>
+
+    
+
 </body>
 </html>
