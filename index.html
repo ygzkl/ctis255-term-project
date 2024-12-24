@@ -6,15 +6,8 @@
     <title>2024 - Fall - Project</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-        $(function(){
-            // ----- Initial Page (Team Members) -----
-            $("#continue-to-profiles").on("click", function(){
-            $("#initial-page").addClass("hidden");
-            $("#profile-page").removeClass("hidden");
-            });      
-        });
-    </script>
+    
+    <script src="script.js"></script>
 </head>
 
 
@@ -28,6 +21,8 @@
                 <span class="site-title">CTIS <span>Crypto Trading Information System</span></span>
             </div>
         </div>
+
+
         <div class="team-members-page">
             <h2>Team Members</h2>
             <ul>
@@ -38,21 +33,27 @@
             </ul>
           <button id="continue-to-profiles">Continue</button>
         </div>
+        
+        <!-- Profile Selection Page -->
+    <div class="profile-page hidden">
+        <div class="profile-list">
+            
+        </div>
+
+        <div id = "add-box">
+            <h4>New Profile</h4>
+            <input type="text" id="new-profile-name" placeholder="Enter new profile..." >
+            <br>
+            <button id="add-profile-btn">Add</button>
+        </div>
+
+        <button id="new-profile-btn">New Profile</button>
     </div>
 
-    <!-- Profile Selection Page -->
-    <div id="profile-page" class="hidden">
-        <div class="header-bar">
-        <div class="header-left">
-            <span class="site-title">CTIS <span>Crypto Trading Information System</span></span>
-        </div>
-        </div>
-        <div class="profile-page">
-        <div class="profile-actions">
-            <button id="new-profile-btn" class="new-profile-btn">New Profile</button>
-        </div>
-        <div id="profile-list" class="profile-list"></div>
-        </div>
+
     </div>
+
+    
+
 </body>
 </html>
