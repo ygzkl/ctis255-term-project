@@ -4,8 +4,55 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>2024 - Fall - Project</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(function(){
+            // ----- Initial Page (Team Members) -----
+            $("#continue-to-profiles").on("click", function(){
+            $("#initial-page").addClass("hidden");
+            $("#profile-page").removeClass("hidden");
+            });      
+        });
+    </script>
 </head>
+
+
+
 <body>
-    
+
+    <!-- Initial Page --> 
+    <div id="initial-page">
+        <div class="header-bar">
+            <div class="header-left">
+                <span class="site-title">CTIS <span>Crypto Trading Information System</span></span>
+            </div>
+        </div>
+        <div class="team-members-page">
+            <h2>Team Members</h2>
+            <ul>
+                <li>Hasan Hüseyin Balbıçak</li>
+                <li>Efe Baran Durmaz</li>
+                <li>Yağız Emir Kula</li>
+                <li>Muhammed Talha Nalbant</li>
+            </ul>
+          <button id="continue-to-profiles">Continue</button>
+        </div>
+    </div>
+
+    <!-- Profile Selection Page -->
+    <div id="profile-page" class="hidden">
+        <div class="header-bar">
+        <div class="header-left">
+            <span class="site-title">CTIS <span>Crypto Trading Information System</span></span>
+        </div>
+        </div>
+        <div class="profile-page">
+        <div class="profile-actions">
+            <button id="new-profile-btn" class="new-profile-btn">New Profile</button>
+        </div>
+        <div id="profile-list" class="profile-list"></div>
+        </div>
+    </div>
 </body>
 </html>

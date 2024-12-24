@@ -1,0 +1,77 @@
+body {
+    margin:0;
+    padding:0;
+    font-family: Arial, sans-serif;
+    background:#f0f0f0;
+    color:#333;
+  }
+  
+  .hidden {
+    display:none !important;
+  }
+  
+  /* Header Bar */
+  .header-bar {
+    background:#fff;
+    border-bottom:1px solid #ccc;
+    padding:10px 20px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+  }
+  .site-title {
+    font-size:20px;
+    font-weight:bold;
+  }
+  .site-title span {
+    font-size:14px;
+    font-weight:normal;
+    margin-left:5px;
+    color:#666;
+  }
+  .header-right {
+    font-size:14px;
+  }
+  .logout-btn {
+    margin-left:10px;
+    font-size:12px;
+    background:#fff;
+    border:1px solid #ccc;
+    cursor:pointer;
+    padding:5px 10px;
+  }
+  .logout-btn:hover {
+    background:#eee;
+  }
+  
+  /* Initial Page */
+  .team-members-page {
+    max-width:600px;
+    margin:50px auto;
+    background:#fff;
+    padding:20px;
+    box-shadow:0 0 10px rgba(0,0,0,0.1);
+    text-align:center;
+  }
+  .team-members-page h2 {
+    margin-top:0;
+  }
+  .team-members-page ul {
+    list-style:none;
+    padding:0;
+    margin:20px 0;
+  }
+  .team-members-page ul li {
+    margin:5px 0;
+  }
+  #continue-to-profiles {
+    background:#fff;
+    border:1px solid #ccc;
+    padding:5px 10px;
+    cursor:pointer;
+    font-size:14px;
+  }
+  #continue-to-profiles:hover {
+    background:#eee;
+  }
+  
