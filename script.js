@@ -11,6 +11,7 @@ $(function(){
     });      
 
     $("#new-profile-btn").on("click", function(){
+        $("#add-box").removeClass("hidden");
         $("#add-box input").focus();
     });
 
@@ -20,6 +21,9 @@ $(function(){
 
         else
         profiles.push({name: $("#add-box input").val(), initialMoney: 1000});
+
+        $("#add-box input").val("");
+        $("#add-box").addClass("hidden");
         renderProfiles();
     });
 
@@ -27,7 +31,6 @@ $(function(){
         $(".profile-list").empty();
         
         if((profiles.length === 0)){
-            console.log("EMPTY");
             $(".profile-list").append(`
                 <div class="profile">
                     <h3>EMPTY</h3>
@@ -36,17 +39,19 @@ $(function(){
         }
 
         else{
-            
+            $(".profile-list").empty();
 
             for(let i = 0; i < profiles.length; i++){
-                console.log(profiles[i]);
-                
                 $(".profile-list").append(`
-                    <div class="profile">
-                        <button class="rmv-btn">Remove</button>
-                        <h3>${profiles[i].name}</h3>
-                        <p>Initial Money: $${profiles[i].initialMoney}</p>
+                    <a href="https://www.google.com">
+                   <div class="profile">
+                        
+                            <button class="rmv-btn">Remove</button>
+                            <h3>${profiles[i].name}</h3>
+                            <p>Initial Money: $${profiles[i].initialMoney}</p>
+                        
                     </div>
+               </a>
                 `);
             }
         }
@@ -56,7 +61,6 @@ $(function(){
         let index = $(this).parent().index();
         profiles.splice(index, 1);
         renderProfiles();
-
     });
 
 });

@@ -100,15 +100,22 @@ body {
     align-items: center; */
   }
 
-  .profile{
+  .profile {
+    display: block;
     margin: 40vh auto;
     padding: 10px;
     border: 1px solid #ccc;
 
     width: 200px;
     text-align: center;
+    
   }
 
+  a{
+    margin:  auto;
+    text-decoration: none;
+    color: inherit;
+  }
   .profile h3{
     font-size: 2em;
     font-weight: normal;
@@ -117,6 +124,7 @@ body {
 
   #add-box{
     padding: 10px;
+    background: #fff;
     border: 1px solid #ccc;
     position: absolute;
     top: 20px;
