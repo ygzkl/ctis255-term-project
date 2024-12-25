@@ -1,72 +1,68 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>2024 - Fall - Project</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css" />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="script.js"></script>
-</head>
+  </head>
 
-
-
-<body>
-
-    <!-- Initial Page --> 
+  <body>
+    <!-- Initial Page -->
     <div id="initial-page">
-        <div class="header-bar">
-            <div class="header-left">
-                <span class="site-title">CTIS <span>Crypto Trading Information System</span></span>
-            </div>
-            <div class="header-right hidden">
-                <span class="username" id="current-profile-name"></span>
-                <button id="logout-btn" class="logout-btn">Logout</button>
-              </div>
+      <div class="header-bar">
+        <div class="header-left">
+          <span class="site-title"
+            >CTIS <span>Crypto Trading Information System</span></span
+          >
+        </div>
+        <div class="header-right hidden">
+          <span class="username" id="current-profile-name"></span>
+          <button id="logout-btn" class="logout-btn">Logout</button>
+        </div>
+      </div>
+
+      <div class="team-members-page">
+        <h2>Team Members</h2>
+        <ul>
+          <li>Hasan Hüseyin Balbıçak</li>
+          <li>Efe Baran Durmaz</li>
+          <li>Yağız Emir Kula</li>
+          <li>Muhammed Talha Nalbant</li>
+        </ul>
+        <button id="continue-to-profiles">Continue</button>
+      </div>
+
+      <!-- Profile Selection Page -->
+      <div class="profile-page hidden">
+        <div id="add-box" class="hidden" class="profile">
+          <h4>New Profile</h4>
+          <input
+            type="text"
+            id="new-profile-name"
+            placeholder="Enter new profile..."
+          />
+          <br />
+          <button id="add-profile-btn">Add</button>
         </div>
 
+        <div class="profile-list"></div>
 
-        <div class="team-members-page">
-            <h2>Team Members</h2>
-            <ul>
-                <li>Hasan Hüseyin Balbıçak</li>
-                <li>Efe Baran Durmaz</li>
-                <li>Yağız Emir Kula</li>
-                <li>Muhammed Talha Nalbant</li>
-            </ul>
-          <button id="continue-to-profiles">Continue</button>
+        <button id="new-profile-btn">New Profile</button>
+      </div>
+
+      <div class="main-content hidden">
+        <h1>Day <span id="current-day"></span></h1>
+
+        <div class="date-text" id="current-date"></div>
+        <div class="day-controls">
+          <button id="next-day-btn" class="day-btn">Next Day</button>
+          <button id="play-btn" class="day-btn">Play</button>
+          <button id="stop-play-btn" class="day-btn">Pause</button>
         </div>
-        
-        
-
-        <!-- Profile Selection Page -->
-        <div class="profile-page hidden">
-            
-            <div id = "add-box" class="hidden" class="profile">
-                <h4>New Profile</h4>
-                <input type="text" id="new-profile-name" placeholder="Enter new profile..." >
-                <br>
-                <button id="add-profile-btn">Add</button>
-            </div>
-
-            <div class="profile-list">         
-            </div>
-
-            <button id="new-profile-btn">New Profile</button>
-        </div>
-
-        <div class="main-content hidden">
-            <h1>Day <span id="current-day"></span></h1>
-
-            <div class="date-text" id="current-date"></div>
-
-
-        </div>
-
-
+      </div>
     </div>
-
-    
-
-</body>
+  </body>
 </html>

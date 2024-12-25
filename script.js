@@ -1,11 +1,6 @@
 let profiles = loadProfilesFromStorage();
 console.log(profiles);
 $(function () {
-  // constants
-  const END_DAY = 365;
-  const START_DAY = 2;
-  const YEAR_START = new Date(2021, 0, 1);
-
   // ----- Initial Page (Team Members) -----
   $("#continue-to-profiles").on("click", function () {
     $(".team-members-page").addClass("hidden");
@@ -85,6 +80,40 @@ $(function () {
     $(".header-right").addClass("hidden");
     $(".main-content").addClass("hidden");
   });
+
+  // constants
+  const END_DAY = 365;
+  const START_DAY = 2;
+  const YEAR_START = new Date(2021, 0, 1);
+  let currentDay = START_DAY;
+  // date part of the next day button
+  function calculateDateFromDay(day) {
+    const date = new Date(YEAR_START.getTime());
+    date.setDate(date.getDate() + (day - 1)); // adjust for the given day
+    return date.toLocaleDateString("en-US", {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    });
+  }
+
+  // update day and date in the UI
+  function updateDayAndDateUI() {
+    $("#current-day").text(currentDay);
+    $("#current-date").text(calculateDateFromDay(currentDay));
+  }
+
+  // it changes to the next day until the end of the sim
+  $("#next-day-btn").on("click", function () {
+    if (currentDay < END_DAY) {
+      currentDay++;
+      updateDayAndDateUI();
+    } else {
+      alert("End of the simulation!");
+    }
+  });
+
+  updateDayAndDateUI();
 });
 
 function saveProfiles() {
