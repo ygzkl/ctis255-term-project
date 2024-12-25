@@ -100,9 +100,17 @@ $(function () {
     });
   }
   // update day and date in the UI
-  function updateDayAndDateUI() {
+  let selectedCoin = "BTC"; // bu dümenden bi implementasyon, currentProfile gelene kadar
+  function updateUI(selectedCoin) {
     $("#current-day").text(currentDay);
     $("#current-date").text(calculateDateFromDay(currentDay));
+
+    // $(".coin-option").removeClass("selected");
+    // buraya currentProfile.selectedCoin gelmesi lazım
+    // put the ring selection to the new coin
+    $(`.coin-option[data-coin="${selectedCoin}"]`).addClass("selected");
+    // display the coin name
+    $("#selected-coin-name").text(coinFullName(selectedCoin));
   }
   // it changes to the next day until the end of the sim
   $("#next-day-btn").on("click", function () {
@@ -113,12 +121,48 @@ $(function () {
       alert("End of the simulation!");
     }
   });
-  updateDayAndDateUI();
 
   //
   //    COIN SELECTION BUTTONS
   //
   //
+  function coinFullName(coin) {
+    switch (coin) {
+      case "BTC":
+        return "Bitcoin";
+      case "ETH":
+        return "Ethereum";
+      case "ADA":
+        return "Cardano";
+      case "XRP":
+        return "Ripple";
+      case "DOGE":
+        return "Dogecoin";
+      case "AVAX":
+        return "Avalanche";
+      case "TRX":
+        return "Tron";
+      case "SNX":
+        return "Synthetix";
+      case "POL":
+        return "Polygon";
+      default:
+        return coin;
+    }
+  }
+
+  $(".coin-option").on("click", function () {
+    selectedCoin = $(this).data("coin");
+    $(".coin-option").removeClass("selected");
+    $(this).addClass("selected");
+
+    // update the new coin name
+    $("#selected-coin-name").text(coinFullName(selectedCoin));
+
+    console.log(`Selected coin updated to: ${selectedCoin}`);
+  });
+
+  updateUI();
 });
 
 function saveProfiles() {
