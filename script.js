@@ -1,6 +1,7 @@
-
+let profiles = loadProfilesFromStorage();
+console.log(profiles);
 $(function(){
-    let profiles = [];   
+ 
 
     // ----- Initial Page (Team Members) -----
     $("#continue-to-profiles").on("click", function(){
@@ -24,6 +25,7 @@ $(function(){
 
         $("#add-box input").val("");
         $("#add-box").addClass("hidden");
+        saveProfiles();
         renderProfiles();
     });
 
@@ -53,26 +55,32 @@ $(function(){
                     </div>
                </a>
                 `);
+
+                localStorage.setItem("profiles", JSON.stringify(profiles))
             }
         }
     }
 
     $(".profile-list").on("click", ".rmv-btn", function(e){
         let index = $(this).parent().index();
-        e.preventDefault();
-        profiles.splice(index, 1);
+        e.stopPropagation();
+        localStorage.removeItem(profiles.splice(index, 1)); 
         renderProfiles();
     });
 
 
-    $(".profile-list").on("click", ".user-wallet-link", function(){
+    
+
+    $(".profile-list").on("click", ".user-wallet-link", function(e){
+        e.preventDefault();
         const name = $(this).data("name");
         // if (name && profiles[name]) {
-          currentProfile = profiles[name];
- //         $("#current-profile-name").text(name);
-          $(".profile-page").addClass("hidden");
-          $("#main-content").removeClass("hidden");
-          $(".header-right").removeClass("hidden");
+            currentProfile = profiles[name];
+            console.log(currentProfile);
+            $("#current-profile-name").text(name);
+            $(".profile-page").addClass("hidden");
+            $("#main-content").removeClass("hidden");
+            $(".header-right").removeClass("hidden");
         // }
       });
     
@@ -81,14 +89,22 @@ $(function(){
         $("#main-content").addClass("hidden");
         $(".header-right").addClass("hidden");
     });
+
+    
+    
 });
 
-if (localStorage.getItem("profilelist")) {
-    profiles = JSON.parse(localStorage.getItem("profilelist"));
-    console.log(profiles);
-}
+    function saveProfiles() {
+        localStorage.setItem("profiles", JSON.stringify(profiles));
+        console.log(profiles);
+    }
 
+    function loadProfilesFromStorage(){
+        let data = localStorage.getItem("profiles")  // null if tasks is not availabe.
+        return data ? JSON.parse(data) : [] 
+    }
 
-function saveProfiles() {
-    localStorage.setItem("profilelist", JSON.stringify(profiles));
-}
+// if (localStorage.getItem("profiles")) {
+//     profiles = JSON.parse(localStorage.getItem("profiles"));
+//     console.log(profiles);
+// }
