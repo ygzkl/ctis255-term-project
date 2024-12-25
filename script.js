@@ -45,8 +45,8 @@ $(function(){
 
             for(let i = 0; i < profiles.length; i++){
                 $(".profile-list").append(`
-                    <a class="user-wallet-link" href="#">
-                   <div class="profile">
+                    <a class="user-wallet-link" href="#" data-name="${profiles[i].name}">
+                    <div class="profile">
                         
                             <button class="rmv-btn">Remove</button>
                             <h3>${profiles[i].name}</h3>
@@ -67,8 +67,6 @@ $(function(){
         localStorage.removeItem(profiles.splice(index, 1)); 
         renderProfiles();
     });
-
-
     
 
     $(".profile-list").on("click", ".user-wallet-link", function(e){
@@ -77,10 +75,11 @@ $(function(){
         // if (name && profiles[name]) {
             currentProfile = profiles[name];
             console.log(currentProfile);
-            $("#current-profile-name").text(name);
+            console.log(name);
             $(".profile-page").addClass("hidden");
             $("#main-content").removeClass("hidden");
             $(".header-right").removeClass("hidden");
+            $("#current-profile-name").text(name);
         // }
       });
     
@@ -100,11 +99,6 @@ $(function(){
     }
 
     function loadProfilesFromStorage(){
-        let data = localStorage.getItem("profiles")  // null if tasks is not availabe.
+        let data = localStorage.getItem("profiles") 
         return data ? JSON.parse(data) : [] 
     }
-
-// if (localStorage.getItem("profiles")) {
-//     profiles = JSON.parse(localStorage.getItem("profiles"));
-//     console.log(profiles);
-// }
