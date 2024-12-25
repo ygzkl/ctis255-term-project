@@ -199,3 +199,48 @@ button {
   margin-bottom: 10px;
   font-size: 16px;
 }
+/* end of the coin option selection */
+
+.mainUI {
+  margin: 30px auto;
+  width: 260px;
+  border: 1px solid #ccc;
+  border-radius: 15px;
+  position: relative;
+  font-family: arial;
+}
+.chart {
+  height: 120px;
+  position: relative;
+}
+.header {
+  text-align: center;
+  color: #999;
+  padding: 10px;
+  border-bottom: 1px solid #ccc;
+  font-size: 1.4em;
+}
+.stick {
+  border: 1px solid black;
+  width: 0;
+  position: absolute;
+}
+.bar {
+  position: absolute;
+  width: 10px;
+  border: 1px solid black;
+  z-index: 1;
+}
+.label {
+  position: absolute;
+  left: -20px;
+}
+#l0 {
+  bottom: -7px;
+}
+#l120 {
+  top: 37px;
+  left: -35px;
+}
+
+/* start of the chart styles */

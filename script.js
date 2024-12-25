@@ -111,12 +111,16 @@ $(function () {
     $(`.coin-option[data-coin="${selectedCoin}"]`).addClass("selected");
     // display the coin name
     $("#selected-coin-name").text(coinFullName(selectedCoin));
+
+    //
+
+    renderChart(selectedCoin, currentDay);
   }
   // it changes to the next day until the end of the sim
   $("#next-day-btn").on("click", function () {
     if (currentDay < END_DAY) {
       currentDay++;
-      updateDayAndDateUI();
+      updateUI();
     } else {
       alert("End of the simulation!");
     }
@@ -161,6 +165,16 @@ $(function () {
 
     console.log(`Selected coin updated to: ${selectedCoin}`);
   });
+  //
+  // chartstick implementation
+  //
+  //
+  let chartVisibleDays = 120; //num of visible days of chart
+
+  //
+  //
+  //
+  //
 
   updateUI();
 });
