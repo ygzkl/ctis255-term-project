@@ -77,7 +77,7 @@ $(function(){
             console.log(currentProfile);
             console.log(name);
             $(".profile-page").addClass("hidden");
-            $("#main-content").removeClass("hidden");
+            $(".main-content").removeClass("hidden");
             $(".header-right").removeClass("hidden");
             $("#current-profile-name").text(name);
         // }
@@ -85,10 +85,9 @@ $(function(){
     
     $(".header-right button").on("click", function(){
         $(".profile-page").removeClass("hidden");
-        $("#main-content").addClass("hidden");
         $(".header-right").addClass("hidden");
+        $(".main-content").addClass("hidden");
     });
-
     
     
 });

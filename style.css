@@ -147,3 +147,20 @@ a{
 .logout-btn:hover {
   background:#eee;
 }
+
+/* candlestick styles */
+
+.main-content {
+  max-width: 900px;
+  margin: 20px auto;
+  background: #fff;
+  padding: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.main-content h1 {
+  margin: 10px 0;
+  font-size: 30px;
+  font-weight: bold;
+}
