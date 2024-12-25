@@ -1,136 +1,149 @@
 body {
-    margin:0;
-    padding:0;
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-    background:#f0f0f0;
-    color:#333;
-  }
-  
-  #initial-page{
-    margin: 0px 40px;
-    border: 2px solid #999;
-    height: 100vh;
-  }
+  margin:0;
+  padding:0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  background:#f0f0f0;
+  color:#333;
+}
 
-  .hidden {
-    display:none !important;
-  }
-  
-  /* Header Bar */
-  .header-bar {
-    background:#fff;
-    border-bottom:1px solid #ccc;
-    padding:10px 20px;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-  }
-  .site-title {
-    font-size:20px;
-    font-weight:bold;
-  }
-  .site-title span {
-    font-size:14px;
-    font-weight:normal;
-    margin-left:5px;
-    color:#666;
-  }
+#initial-page{
+  margin: 0px 40px;
+  border: 2px solid #999;
+  height: 100vh;
+}
+
+.hidden {
+  display:none !important;
+}
+
+/* Header Bar */
+.header-bar {
+  background:#fff;
+  border-bottom:1px solid #ccc;
+  padding:10px 20px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+.site-title {
+  font-size:20px;
+  font-weight:bold;
+}
+.site-title span {
+  font-size:14px;
+  font-weight:normal;
+  margin-left:5px;
+  color:#666;
+}
 /*   
-  .logout-btn {
-    margin-left:10px;
-    font-size:12px;
-    background:#fff;
-    border:1px solid #ccc;
-    cursor:pointer;
-    padding:5px 10px;
-  }
-  .logout-btn:hover {
-    background:#eee;
-  }
-   */
-  /* Initial Page */
-  .team-members-page {
-    max-width:600px;
-    margin:50px auto;
-    background:#fff;
-    padding:20px;
-    box-shadow:0 0 10px rgba(0,0,0,0.1);
-    text-align:center;
-  }
-  .team-members-page h2 {
-    margin-top:0;
-  }
-  .team-members-page ul {
-    list-style:none;
-    padding:0;
-    margin:20px 0;
-  }
-  .team-members-page ul li {
-    margin:5px 0;
-  }
-  button{
-    background:#fff;
-    border:1px solid #ccc;
-    padding:5px 10px;
-    cursor:pointer;
-    font-size:14px;
-  }
-  button:hover {
-    background:#eee;
-  }
+.logout-btn {
+  margin-left:10px;
+  font-size:12px;
+  background:#fff;
+  border:1px solid #ccc;
+  cursor:pointer;
+  padding:5px 10px;
+}
+.logout-btn:hover {
+  background:#eee;
+}
+ */
+/* Initial Page */
+.team-members-page {
+  max-width:600px;
+  margin:50px auto;
+  background:#fff;
+  padding:20px;
+  box-shadow:0 0 10px rgba(0,0,0,0.1);
+  text-align:center;
+}
+.team-members-page h2 {
+  margin-top:0;
+}
+.team-members-page ul {
+  list-style:none;
+  padding:0;
+  margin:20px 0;
+}
+.team-members-page ul li {
+  margin:5px 0;
+}
+button{
+  background:#fff;
+  border:1px solid #ccc;
+  padding:5px 10px;
+  cursor:pointer;
+  font-size:14px;
+}
+button:hover {
+  background:#eee;
+}
 
-  .profile-page{
-    height: 100vh;
-    position: relative;
+.profile-page{
+   height: 100vh; 
+  /* position: relative; */
+}
 
-  }
-
-  #new-profile-btn{
-    position: absolute;
-    left: 60px;
-    bottom: 60px;
-  }
+#new-profile-btn{
+  position: absolute;
+  left: 60px;
+  bottom: 60px;
+}
 
 
-  .profile-list{
-    display: flex;
-    margin: auto auto;
+.profile-list{
+  display: flex;
+  margin: auto auto;
 
-    /* justify-content: center;
-    align-items: center; */
-  }
+  /* justify-content: center;
+  align-items: center; */
+}
 
-  .profile {
-    display: block;
-    margin: 40vh auto;
-    padding: 10px;
-    border: 1px solid #ccc;
+.profile {
+  display: block;
+  margin: 0 auto;
+  padding: 10px;
+  border: 1px solid #ccc;
 
-    width: 200px;
-    text-align: center;
-    
-  }
+  width: 200px;
+  text-align: center;
+  
+}
 
-  a{
-    margin:  auto;
-    text-decoration: none;
-    color: inherit;
-  }
-  .profile h3{
-    font-size: 2em;
-    font-weight: normal;
-    color: #999;
-  }
+a{
+  margin:  auto;
+  text-decoration: none;
+  color: inherit;
+}
+.profile h3{
+  font-size: 2em;
+  font-weight: normal;
+  color: #999;
+}
 
-  #add-box{
-    padding: 10px;
-    background: #fff;
-    border: 1px solid #ccc;
-    position: absolute;
-    top: 20px;
-    left: 85vh;
-  }
+#add-box{
+  padding: 10px;
+  width: 200px;
+  margin: 40px auto;
+  background: #fff;
+  border: 1px solid #ccc;
+}
 
-  #add-box input,h4,button {
-    margin: 10px 0;
-  }
+#add-box input,h4,button {
+  margin: 10px 0;
+}
+
+.header-right {
+  font-size:14px;
+}
+.logout-btn {
+  margin-left:10px;
+  font-size:12px;
+  background:#fff;
+  border:1px solid #ccc;
+  cursor:pointer;
+  padding:5px 10px;
+}
+.logout-btn:hover {
+  background:#eee;
+}
