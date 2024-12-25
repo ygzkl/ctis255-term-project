@@ -81,6 +81,9 @@ $(function () {
     $(".main-content").addClass("hidden");
   });
 
+  //
+  // DAY BUTTONS
+  //
   // constants
   const END_DAY = 365;
   const START_DAY = 2;
@@ -96,13 +99,11 @@ $(function () {
       year: "numeric",
     });
   }
-
   // update day and date in the UI
   function updateDayAndDateUI() {
     $("#current-day").text(currentDay);
     $("#current-date").text(calculateDateFromDay(currentDay));
   }
-
   // it changes to the next day until the end of the sim
   $("#next-day-btn").on("click", function () {
     if (currentDay < END_DAY) {
@@ -112,8 +113,12 @@ $(function () {
       alert("End of the simulation!");
     }
   });
-
   updateDayAndDateUI();
+
+  //
+  //    COIN SELECTION BUTTONS
+  //
+  //
 });
 
 function saveProfiles() {
