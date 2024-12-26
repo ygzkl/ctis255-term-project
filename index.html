@@ -110,19 +110,25 @@
       </div>
 
       <div class="bottom-section hidden">
+
         <div class="trading-panel trading-ui">
           <h3>Trading</h3>
           <div class="trade-box buy-box">
-            <label>Buy</label>
+            <div id = "buttons">
+              <button id = "buy-btn"><div>Buy</div></button>
+              <button id = "sell-btn"><div>Sell</div></button>
+            </div>
+            
             <input type="number" id="buy-amount" placeholder="Amount"/>
-            <button id="buy-btn">Buy</button>
+            <button id="process-btn"></button>
           </div>
-          <div class="trade-box sell-box">
+          <!-- <div class="trade-box sell-box">
             <label>Sell</label>
             <input type="number" id="sell-amount" placeholder="Amount"/>
             <button id="sell-btn">Sell</button>
-          </div>
+          </div> -->
         </div>
+
         <div class="wallet-panel">
           <h3>Wallet</h3>
           <table>

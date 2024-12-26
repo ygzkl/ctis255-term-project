@@ -256,6 +256,8 @@ button {
   justify-content:space-between;
   align-items:flex-start;
   margin-top:20px;
+  margin-left: 50px;
+  margin-right: 50px;
 }
 
 .trading-panel {
@@ -319,4 +321,19 @@ button {
 }
 .wallet-panel th {
   background:#eee;
+}
+
+#buttons{
+  display: flex;
+  height: max-content;
+  background: white;
+  border-radius: 20px;
+  border: 2px solid #fff;
+}
+
+#buttons button{
+  margin: 0px;
+  border-radius: 20px;
+  background-color: #fff;
+  border: 0px solid #fff;
 }

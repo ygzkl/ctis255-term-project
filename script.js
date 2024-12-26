@@ -2,7 +2,10 @@ let profiles = loadProfilesFromStorage();
 console.log(profiles);
 let currentProfile=null; 
 $(function () {
-    
+  
+
+  
+
   // ----- Initial Page (Team Members) -----
   $("#continue-to-profiles").on("click", function () {
     $(".team-members-page").addClass("hidden");
@@ -108,6 +111,13 @@ $(".profile-list").on("click", ".user-wallet-link", function (e) {
   const START_DAY = 2;
   const YEAR_START = new Date(2021, 0, 1);
   let currentDay = START_DAY;
+  let selectedCoin = "BTC";
+
+  $("#buy-btn").css("background", "green");
+  $("#buttons").css("border-color", "green");
+  $("#process-btn").css("background", "green").text("Buy").append(` ${selectedCoin}`);
+  
+
   // date part of the next day button
   function calculateDateFromDay(day) {
     const date = new Date(YEAR_START.getTime());
@@ -156,7 +166,7 @@ $(".profile-list").on("click", ".user-wallet-link", function (e) {
   //    COIN SELECTION BUTTONS
   //
   //
-  function coinFullName(coin) {
+  /* function coinFullName(coin) {
     switch (coin) {
       case "BTC":
         return "Bitcoin";
@@ -179,7 +189,8 @@ $(".profile-list").on("click", ".user-wallet-link", function (e) {
       default:
         return coin;
     }
-  }
+  } */
+
 
   $(".coin-option").on("click", function () {
     selectedCoin = $(this).data("coin");
@@ -197,7 +208,29 @@ $(".profile-list").on("click", ".user-wallet-link", function (e) {
   //
 
   updateUI();
+
+
+  $("#buy-btn").on("click", function () {
+    $(this).css("background", "green");
+    $("#buttons").css("border-color", "green");
+    $("#sell-btn").css("background", "#fff");
+    $("#process-btn").css("background", "green").text("Buy").append(` ${selectedCoin}`);
+  });
+
+  
+
+  $("#sell-btn").on("click", function () {
+    $(this).css("background", "red");
+    $("#buttons").css("border-color", "red");
+    $("#buy-btn").css("background", "#fff");
+    $("#process-btn").css("background", "red").text("Sell").append(` ${selectedCoin}`);
+
+  });
+
+
 });
+
+  
 
 function saveProfiles() {
   localStorage.setItem("profiles", JSON.stringify(profiles));
