@@ -1,6 +1,8 @@
 let profiles = loadProfilesFromStorage();
 console.log(profiles);
+let currentProfile=null; 
 $(function () {
+    
   // ----- Initial Page (Team Members) -----
   $("#continue-to-profiles").on("click", function () {
     $(".team-members-page").addClass("hidden");
@@ -16,7 +18,9 @@ $(function () {
 
   $("#add-profile-btn").on("click", function () {
     if ($("#add-box input").val() === "") alert("Please enter a name.");
-    else profiles.push({ name: $("#add-box input").val(), initialMoney: 1000 });
+    else {
+        profiles.push({ name: $("#add-box input").val(), initialMoney: 1000, currentDay:2, coins:{} });
+        console.log("profile info"+ profiles);}
 
     $("#add-box input").val("");
     $("#add-box").addClass("hidden");
@@ -54,6 +58,7 @@ $(function () {
     }
   };
 
+  //remove profile
   $(".profile-list").on("click", ".rmv-btn", function (e) {
     let index = $(this).parent().index();
     e.stopPropagation();
@@ -61,19 +66,29 @@ $(function () {
     renderProfiles();
   });
 
-  $(".profile-list").on("click", ".user-wallet-link", function (e) {
+
+
+$(".profile-list").on("click", ".user-wallet-link", function (e) {
     e.preventDefault();
     const name = $(this).data("name");
-    // if (name && profiles[name]) {
-    currentProfile = profiles[name];
-    console.log(currentProfile);
-    console.log(name);
-    $(".profile-page").addClass("hidden");
-    $(".main-content").removeClass("hidden");
-    $(".header-right").removeClass("hidden");
-    $("#current-profile-name").text(name);
-    // }
-  });
+  
+    // Find the profile by name
+    currentProfile = profiles.find(profile => profile.name === name);
+  
+    if (currentProfile) {
+      console.log(currentProfile);
+      //console.log(name);
+  
+      $(".profile-page").addClass("hidden");
+      $(".main-content").removeClass("hidden");
+      $(".header-right").removeClass("hidden");
+      $("#current-profile-name").text(currentProfile.name);
+      updateUI();
+    } else {
+        console.error("Profile not found!");
+      }
+    });
+
 
   $(".header-right button").on("click", function () {
     $(".profile-page").removeClass("hidden");
@@ -99,11 +114,12 @@ $(function () {
       year: "numeric",
     });
   }
+  /*
   // update day and date in the UI
   let selectedCoin = "BTC"; // bu dümenden bi implementasyon, currentProfile gelene kadar
   function updateUI() {
-    $("#current-day").text(currentDay);
-    $("#current-date").text(calculateDateFromDay(currentDay));
+    $("#current-day").text(currentProfile{"name"}.currentDay);
+    $("#current-date").text(calculateDateFromDay(currentProfile.currentDay));
 
     // $(".coin-option").removeClass("selected");
     // buraya currentProfile.selectedCoin gelmesi lazım
@@ -113,11 +129,19 @@ $(function () {
     $("#selected-coin-name").text(coinFullName(selectedCoin));
 
     //
-  }
+  }*/
+
+    const updateUI = () => {
+        if (!currentProfile) return;
+        $("#current-day").text(currentProfile.currentDay);
+        $("#current-date").text(calculateDateFromDay(currentProfile.currentDay));
+      };
+
+
   // it changes to the next day until the end of the sim
   $("#next-day-btn").on("click", function () {
-    if (currentDay < END_DAY) {
-      currentDay++;
+    if (currentProfile.currentDay < END_DAY) {
+      currentProfile.currentDay++;
       updateUI();
     } else {
       alert("End of the simulation!");
