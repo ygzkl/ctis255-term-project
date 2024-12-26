@@ -238,7 +238,7 @@ $(function () {
     });
     let minP = Math.min(...allPrices);
     let maxP = Math.max(...allPrices);
-    let padding = 10;
+    let padding = 1;
     let chartHeight = $chart.height();
 
     // Convert a price to a Y-position in the chart
@@ -263,54 +263,32 @@ $(function () {
 
       // "stick" = the line from low to high
       let $stick;
-
-      if (yLow > yHigh) {
+      
         $stick = $("<div>")
           .addClass("stick")
           .css({
             left: xPos - 2.50 + "px",
-            bottom: yLow + "px",
-            top: yHigh + "px",
-            height: yLow - yHigh + "px" // Corrected height calculation
+            bottom: yLow  - $(".bar").height() + "px",
+            top: yHigh + $(".bar").height() + "px",
+            height: Math.abs(yLow - yHigh) + "px" // Corrected height calculation
           });
-      } else if (yLow < yHigh) {
-        $stick = $("<div>")
-          .addClass("stick")
-          .css({
-            left: xPos - 2.25 + "px",
-            bottom: yLow + "px",
-            height: yHigh - yLow + "px" // Corrected height calculation
-          });
-      }
+     
 
 
       // "bar" = the rectangle from open to close
 
       let $bar;
 
-      if(yOpen > yClose){
       $bar = $("<div>")
         .addClass("bar")
         .css({
           background: color,
           left: xPos - 5 + "px",
-          top: yOpen+ "px",
-          bottom: yClose + "px",
+          bottom: Math.max(yOpen, yClose)  + "px",
+          top: Math.min(yOpen, yClose) + "px",
           height: Math.abs(yClose - yOpen) + "px",
         });
-      }
-
-      else if(yOpen < yClose){
-        $bar = $("<div>")
-          .addClass("bar")
-          .css({
-            background: color,
-            left: xPos - 5 + "px",
-            top: yClose + "px",
-            bottom: yOpen + "px",
-            height: Math.abs(yOpen - yClose) + "px",
-          });
-      }
+      
 
       // Append to chart
       $chart.append($stick);
