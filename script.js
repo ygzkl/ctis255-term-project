@@ -238,15 +238,14 @@ $(function () {
     });
     let minP = Math.min(...allPrices);
     let maxP = Math.max(...allPrices);
-    let padding = 1;
+    let padding = 15;
     let chartHeight = $chart.height();
 
     // Convert a price to a Y-position in the chart
     function priceToY(price) {
       let ratio = (price - minP) / (maxP - minP);
       let scaled = ratio * (chartHeight - 2 * padding);
-      let y = chartHeight - padding - scaled;
-      return y;
+      return chartHeight - padding - scaled;
     }
 
     // 3) Draw each candle
