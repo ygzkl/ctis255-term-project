@@ -117,7 +117,7 @@ $(".profile-list").on("click", ".user-wallet-link", function (e) {
   /*
   // update day and date in the UI
   let selectedCoin = "BTC"; // bu dümenden bi implementasyon, currentProfile gelene kadar
-  function updateUI(selectedCoin) {
+  function updateUI() {
     $("#current-day").text(currentProfile{"name"}.currentDay);
     $("#current-date").text(calculateDateFromDay(currentProfile.currentDay));
 
@@ -189,50 +189,6 @@ $(".profile-list").on("click", ".user-wallet-link", function (e) {
   });
   //
   // chartstick implementation
-  //
-  //
-  let chartVisibleDays = 120; //num of visible days of chart
-  function renderCandlestick(date, coinCode) {
-    // find the data for that day's date
-    const dayData = market.find((day) => day.date === date);
-
-    // find the data for a specific coin
-    const coinData = dayData.coins.find((coin) => coin.code === coinCode);
-
-    // render candlestick chart
-    const $chart = $("#candlestick-chart");
-    const dayIndex = market.findIndex((day) => day.date === date);
-    const stickLeft = dayIndex * 20; // Adjust spacing
-    const barLeft = stickLeft - 5;
-
-    const stick = $("<div>")
-      .addClass("stick")
-      .css({
-        height: `${coinData.high - coinData.low}px`,
-        bottom: `${coinData.low}px`,
-        left: `${stickLeft}px`,
-      });
-
-    const bar = $("<div>")
-      .addClass("bar")
-      .css({
-        height: `${Math.abs(coinData.close - coinData.open)}px`,
-        bottom: `${Math.min(coinData.open, coinData.close)}px`,
-        left: `${barLeft}px`,
-        backgroundColor: coinData.close > coinData.open ? "green" : "red",
-      });
-
-    $chart.append(stick);
-    $chart.append(bar);
-  }
-
-  // test
-  renderCandlestick("01-01-2021", "eth");
-  renderCandlestick("02-01-2021", "eth");
-  renderCandlestick("03-01-2021", "eth");
-  renderCandlestick("04-01-2021", "eth");
-  //
-  //
   //
   //
 
