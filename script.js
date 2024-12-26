@@ -112,10 +112,11 @@ $(".profile-list").on("click", ".user-wallet-link", function (e) {
   const YEAR_START = new Date(2021, 0, 1);
   let currentDay = START_DAY;
   let selectedCoin = "BTC";
+  let coinName = coins.find(coin => coin.code === selectedCoin.toLowerCase())?.name || "Coin not found"; 
 
   $("#buy-btn").css("background", "green");
   $("#buttons").css("border-color", "green");
-  $("#process-btn").css("background", "green").text("Buy").append(` ${selectedCoin}`);
+  $("#process-btn").css("background", "green").text("Buy").append(` ${coinName}`);
   
 
   // date part of the next day button
@@ -191,16 +192,30 @@ $(".profile-list").on("click", ".user-wallet-link", function (e) {
     }
   } */
 
+  var isBuy = true;
 
   $(".coin-option").on("click", function () {
     selectedCoin = $(this).data("coin");
+    coinName = coins.find(coin => coin.code === selectedCoin.toLowerCase())?.name || "Coin not found";
+    //console.log(coinName);
+
     $(".coin-option").removeClass("selected");
     $(this).addClass("selected");
 
-    // update the new coin name
-    $("#selected-coin-name").text(coinFullName(selectedCoin));
 
-    console.log(`Selected coin updated to: ${selectedCoin}`);
+    $("#selected-coin-name").text(coinName);
+    // update the new coin name
+   // $("#selected-coin-name").text(coinFullName(selectedCoin));
+    
+    //console.log(`Selected coin updated to: ${selectedCoin}`);
+    
+    if (isBuy) {
+      $("#process-btn").text("Buy").append(` ${coinName}`);
+    } else {
+      $("#process-btn").text("Sell").append(` ${coinName}`);
+    }
+
+
   });
   //
   // chartstick implementation
@@ -211,19 +226,21 @@ $(".profile-list").on("click", ".user-wallet-link", function (e) {
 
 
   $("#buy-btn").on("click", function () {
+    isBuy = true;
     $(this).css("background", "green");
     $("#buttons").css("border-color", "green");
     $("#sell-btn").css("background", "#fff");
-    $("#process-btn").css("background", "green").text("Buy").append(` ${selectedCoin}`);
+    $("#process-btn").css("background", "green").text("Buy").append(` ${coinName}`);
   });
 
   
 
   $("#sell-btn").on("click", function () {
+    isBuy = false;
     $(this).css("background", "red");
     $("#buttons").css("border-color", "red");
     $("#buy-btn").css("background", "#fff");
-    $("#process-btn").css("background", "red").text("Sell").append(` ${selectedCoin}`);
+    $("#process-btn").css("background", "red").text("Sell").append(` ${coinName}`);
 
   });
 
