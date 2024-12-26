@@ -167,6 +167,138 @@ $(function () {
   // chartstick implementation
   //
   //
+  // 1) Basic chartstick rendering function
+  function renderCandlestickChart(candles, containerSelector) {
+    // candles = [ { open, high, low, close }, { ... }, ... ]
+    // containerSelector = e.g. "#candlestick-chart"
+
+    const $chart = $(containerSelector);
+    const chartEl = $chart[0];
+
+    // Clear old bars (if any)
+    $chart.empty();
+
+    if (!candles || candles.length === 0) return; // no data, exit
+
+    // 2) Find min and max among O/H/L/C
+    let allPrices = [];
+    candles.forEach((c) => {
+      allPrices.push(c.low, c.high, c.open, c.close);
+    });
+    let minP = Math.min(...allPrices);
+    let maxP = Math.max(...allPrices);
+
+    let padding = 10;
+    let chartHeight = $chart.height();
+
+    // Convert a price to a Y-position in the chart
+    function priceToY(price) {
+      let ratio = (price - minP) / (maxP - minP);
+      let scaled = ratio * (chartHeight - 2 * padding);
+      let y = chartHeight - padding - scaled;
+      return y;
+    }
+
+    // 3) Draw each candle
+    let xPos = 0; // start from left
+    candles.forEach((c) => {
+      let o = c.open,
+        h = c.high,
+        l = c.low,
+        close = c.close;
+
+      let yOpen = priceToY(o);
+      let yClose = priceToY(close);
+      let yHigh = priceToY(h);
+      let yLow = priceToY(l);
+
+      // Candle color: green if close>open, red if close<open, gray if equal
+      let color = close > o ? "green" : close < o ? "red" : "gray";
+
+      // "stick" = the line from low to high
+      let stick = document.createElement("div");
+      stick.className = "stick";
+      stick.style.left = xPos + "px";
+      stick.style.bottom = yLow + "px";
+      stick.style.height = yHigh - yLow + "px";
+
+      // "bar" = the rectangle from open to close
+      let bar = document.createElement("div");
+      bar.className = "bar";
+      bar.style.background = color;
+      bar.style.left = xPos - 5 + "px"; // offset to center around xPos
+      bar.style.bottom = Math.min(yOpen, yClose) + "px";
+      bar.style.height = Math.abs(yClose - yOpen) + "px";
+
+      // Append to chart
+      chartEl.appendChild(stick);
+      chartEl.appendChild(bar);
+
+      // For tooltips
+      $(bar).data("candle", c);
+      $(stick).data("candle", c);
+
+      // Move xPos for next candle
+      xPos += 20;
+    });
+
+    // 4) Last close line
+    let lastCandle = candles[candles.length - 1];
+    let lastCloseY = priceToY(lastCandle.close);
+    let $lastClose = $("<div class='last-close-line'></div>");
+    $lastClose.css({ top: lastCloseY + "px" });
+    $lastClose.text(lastCandle.close.toFixed(2));
+    $chart.append($lastClose);
+
+    // 5) Tooltip logic (hover)
+    let $tooltip = $("<div class='tooltip hidden'></div>");
+    $chart.append($tooltip);
+
+    $chart.off("mousemove", ".stick,.bar");
+    $chart.off("mouseleave", ".stick,.bar");
+
+    $chart.on("mousemove", ".stick,.bar", function (e) {
+      let cData = $(this).data("candle");
+      if (!cData) return;
+
+      $tooltip.html(`
+        O: ${cData.open}<br/>
+        H: ${cData.high}<br/>
+        L: ${cData.low}<br/>
+        C: ${cData.close}
+      `);
+
+      $tooltip.removeClass("hidden");
+
+      let offset = $chart.offset();
+      $tooltip.css({
+        left: e.pageX - offset.left + 10 + "px",
+        top: e.pageY - offset.top + 10 + "px",
+      });
+    });
+
+    $chart.on("mouseleave", ".stick,.bar", function () {
+      $tooltip.addClass("hidden");
+    });
+  }
+
+  let twoDaysData = [
+    {
+      open: 28951.7,
+      high: 29627.1,
+      low: 28712.4,
+      close: 29359.9,
+    },
+    {
+      open: 29359.7,
+      high: 33233.5,
+      low: 29008.0,
+      close: 32193.3,
+    },
+  ];
+
+  // Immediately render just those 2 candlesticks
+  renderCandlestickChart(twoDaysData, "#candlestick-chart");
 
   updateUI();
 });
