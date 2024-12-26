@@ -249,3 +249,74 @@ button {
   display: none;
 }
 
+
+/* Bottom Section */
+.bottom-section {
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  margin-top:20px;
+}
+
+.trading-panel {
+  background:#f7f7f7;
+  border:1px solid #ccc;
+  padding:10px;
+  max-width:200px;
+  flex:1;
+  text-align:left;
+  margin-right:10px;
+  width: 70%;
+}
+.trading-panel h3 {
+  margin-top:0;
+}
+.trade-box {
+  margin-bottom:10px;
+}
+.trade-box label {
+  display:block;
+  font-weight:bold;
+  margin-bottom:5px;
+}
+.trade-box input {
+  width:90%;
+  padding:5px;
+  margin-bottom:5px;
+  border:1px solid #ccc;
+}
+.trade-box button {
+  width:100%;
+  padding:5px;
+  background:#ddd;
+  border:1px solid #aaa;
+  cursor:pointer;
+  font-size:14px;
+}
+.trade-box button:hover {
+  background:#ccc;
+}
+
+.wallet-panel {
+  background:#f7f7f7;
+  border:1px solid #ccc;
+  padding:10px;
+  flex:2;
+  margin-left:10px;
+}
+.wallet-panel h3 {
+  margin-top:0;
+}
+.wallet-panel table {
+  width:100%;
+  border-collapse:collapse;
+  font-size:14px;
+}
+.wallet-panel th, .wallet-panel td {
+  border:1px solid #ccc;
+  padding:5px;
+  text-align:center;
+}
+.wallet-panel th {
+  background:#eee;
+}

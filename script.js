@@ -83,6 +83,8 @@ $(".profile-list").on("click", ".user-wallet-link", function (e) {
       $(".main-content").removeClass("hidden");
       $(".header-right").removeClass("hidden");
       $("#current-profile-name").text(currentProfile.name);
+      $(".bottom-section").removeClass("hidden")
+      $("#initial-page").css("height", "150vh");
       updateUI();
     } else {
         console.error("Profile not found!");
@@ -94,6 +96,8 @@ $(".profile-list").on("click", ".user-wallet-link", function (e) {
     $(".profile-page").removeClass("hidden");
     $(".header-right").addClass("hidden");
     $(".main-content").addClass("hidden");
+    $(".bottom-section").addClass("hidden")
+    $("#initial-page").css("height", "100vh");
   });
 
   //
