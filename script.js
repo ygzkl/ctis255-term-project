@@ -271,7 +271,7 @@ $(function () {
         .css({
           left: xPos + "px",
           bottom: yLow + "px",
-          height: yHigh - yLow + "px",
+          height: (yHigh - yLow) + "px",
         });
 
       // "bar" = the rectangle from open to close
@@ -286,7 +286,7 @@ $(function () {
 
       // Append to chart
       $chart.append($stick).append($bar);
-      xPos += 30;
+      xPos += $("#candlestick-chart").width() / 120;
     });
 
     let lastCloseY = priceToY(candles[candles.length - 1].close);

@@ -209,22 +209,26 @@ button {
   border: 1px solid #ccc;
   margin-bottom: 20px;
   margin-top: 20px;
+  overflow: hidden; 
 }
 
 .chart {
-  position: relative;
+  position: absolute;
   height: 300px;
+  width: 100%;
 }
 
 .stick {
   position: absolute;
   width: 1px;
-  background: #999;
+  background: #000;
+  overflow: hidden;
 }
 
 .bar {
   position: absolute;
-  width: 10px;
+  width: 5.5px;
+  overflow: hidden;
 }
 
 .last-close-line {
