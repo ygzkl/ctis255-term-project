@@ -220,15 +220,15 @@ button {
 
 .stick {
   position: absolute;
-  width: 1px;
-  background: #000;
+  border: 1px solid black;
+  /* width: 0px; */
   overflow: hidden;
 }
 
 .bar {
   position: absolute;
   width: 5.5px;
-  overflow: hidden;
+  overflow: hidden; z-index: 1;
 }
 
 .last-close-line {
