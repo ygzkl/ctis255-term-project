@@ -1,4 +1,4 @@
-let profiles = loadProfilesFromStorage();
+let profiles =loadProfilesFromStorage();
 console.log(profiles);
 $(function(){
  
@@ -20,8 +20,9 @@ $(function(){
 
         if($("#add-box input").val() === "") alert("Please enter a name.");
 
-        else
-        profiles.push({name: $("#add-box input").val(), initialMoney: 1000});
+        else{
+            profiles.push({name: $("#add-box input").val(), initialMoney: 1000});
+        }
 
         $("#add-box input").val("");
         $("#add-box").addClass("hidden");
