@@ -214,8 +214,6 @@ $(".profile-list").on("click", ".user-wallet-link", function (e) {
     } else {
       $("#process-btn").text("Sell").append(` ${coinName}`);
     }
-
-
   });
   //
   // chartstick implementation
@@ -244,10 +242,28 @@ $(".profile-list").on("click", ".user-wallet-link", function (e) {
 
   });
 
+  let timer;
+  $("#play-btn").on("click", function () {
+    
+    timer = setInterval(() => {
+      if(currentProfile.currentDay<END_DAY){
+        currentProfile.currentDay++;
+        updateUI();
+      }
+      else{
+        clearInterval(timer);
+        alert("End of the simulation!");
+      }
+    }, 100);
+  });
+
+  $("#stop-play-btn").on("click", function () {
+    clearInterval(timer);
+  });
 
 });
 
-  
+
 
 function saveProfiles() {
   localStorage.setItem("profiles", JSON.stringify(profiles));
