@@ -124,16 +124,29 @@ $(function () {
     );
     // display the coin name
     $("#selected-coin-name").text(coinFullName(currentProfile.selectedCoin));
+
+    const candleData = getCandlestickDataForCoin(
+      currentProfile.selectedCoin,
+      2, // how the last 2 days of data
+      currentProfile.currentDay
+    );
+    renderCandlestickChart(candleData, "#candlestick-chart");
   }
 
   // it changes to the next day until the end of the sim
   $("#next-day-btn").on("click", function () {
     if (currentProfile.currentDay < END_DAY) {
       currentProfile.currentDay++;
-      // updateUI();
-      // im using this instead of updateUI so it won't get affected by button changes
-      $("#current-day").text(currentProfile.currentDay);
-      $("#current-date").text(calculateDateFromDay(currentProfile.currentDay));
+      updateUI();
+      const candleData = getCandlestickDataForCoin(
+        currentProfile.selectedCoin,
+        120,
+        currentProfile.currentDay
+      );
+      renderCandlestickChart(candleData, "#candlestick-chart");
+      // // im using this instead of updateUI so it won't get affected by button changes
+      // $("#current-day").text(currentProfile.currentDay);
+      // $("#current-date").text(calculateDateFromDay(currentProfile.currentDay));
     } else {
       alert("End of the simulation!");
     }
@@ -177,7 +190,6 @@ $(function () {
 
     console.log(`Selected coin updated to: ${currentProfile.selectedCoin}`);
     // $(".coin-option").removeClass("selected");
-    // buraya currentProfile.selectedCoin gelmesi lazım
     // put the ring selection to the new coin
     $(`.coin-option[data-coin="${currentProfile.selectedCoin}"]`).addClass(
       "selected"
@@ -190,27 +202,20 @@ $(function () {
   // chartstick implementation
   //
   //
+
   // 1) Basic chartstick rendering function
   function renderCandlestickChart(candles, containerSelector) {
-    // candles = [ { open, high, low, close }, { ... }, ... ]
-    // containerSelector = e.g. "#candlestick-chart"
-
     const $chart = $(containerSelector);
     const chartEl = $chart[0];
 
-    // Clear old bars (if any)
     $chart.empty();
 
-    if (!candles || candles.length === 0) return; // no data, exit
-
-    // 2) Find min and max among O/H/L/C
     let allPrices = [];
     candles.forEach((c) => {
       allPrices.push(c.low, c.high, c.open, c.close);
     });
     let minP = Math.min(...allPrices);
     let maxP = Math.max(...allPrices);
-
     let padding = 10;
     let chartHeight = $chart.height();
 
@@ -225,103 +230,113 @@ $(function () {
     // 3) Draw each candle
     let xPos = 0; // start from left
     candles.forEach((c) => {
-      let o = c.open,
-        h = c.high,
-        l = c.low,
-        close = c.close;
-
-      let yOpen = priceToY(o);
-      let yClose = priceToY(close);
-      let yHigh = priceToY(h);
-      let yLow = priceToY(l);
+      let yOpen = priceToY(o.open);
+      let yClose = priceToY(c.close);
+      let yHigh = priceToY(c.high);
+      let yLow = priceToY(c.low);
 
       // Candle color: green if close>open, red if close<open, gray if equal
-      let color = close > o ? "green" : close < o ? "red" : "gray";
+      let color =
+        c.close > c.open ? "green" : c.close < c.open ? "red" : "gray";
 
       // "stick" = the line from low to high
-      let stick = document.createElement("div");
-      stick.className = "stick";
-      stick.style.left = xPos + "px";
-      stick.style.bottom = yLow + "px";
-      stick.style.height = yHigh - yLow + "px";
+      let $stick = $("<div>")
+        .addClass("stick")
+        .css({
+          left: xPos + "px",
+          bottom: yLow + "px",
+          height: yHigh - yLow + "px",
+        });
 
       // "bar" = the rectangle from open to close
-      let bar = document.createElement("div");
-      bar.className = "bar";
-      bar.style.background = color;
-      bar.style.left = xPos - 5 + "px"; // offset to center around xPos
-      bar.style.bottom = Math.min(yOpen, yClose) + "px";
-      bar.style.height = Math.abs(yClose - yOpen) + "px";
+      let $bar = $("<div>")
+        .addClass("bar")
+        .css({
+          background: color,
+          left: xPos - 5 + "px",
+          bottom: Math.min(yOpen, yClose) + "px",
+          height: Math.abs(yClose - yOpen) + "px",
+        });
 
       // Append to chart
-      chartEl.appendChild(stick);
-      chartEl.appendChild(bar);
-
-      // For tooltips
-      $(bar).data("candle", c);
-      $(stick).data("candle", c);
-
-      // Move xPos for next candle
-      xPos += 20;
+      $chart.append($stick).append($bar);
+      xPos += 30;
     });
 
-    // 4) Last close line
-    let lastCandle = candles[candles.length - 1];
-    let lastCloseY = priceToY(lastCandle.close);
-    let $lastClose = $("<div class='last-close-line'></div>");
-    $lastClose.css({ top: lastCloseY + "px" });
-    $lastClose.text(lastCandle.close.toFixed(2));
+    let lastCloseY = priceToY(candles[candles.length - 1].close);
+    let $lastClose = $("<div class='last-close-line'></div>").css({
+      top: lastCloseY + "px",
+    });
+    // .text(lastCandle.close.toFixed(2))
     $chart.append($lastClose);
 
-    // 5) Tooltip logic (hover)
-    let $tooltip = $("<div class='tooltip hidden'></div>");
-    $chart.append($tooltip);
+    // // 5) Tooltip logic (hover)
+    // let $tooltip = $("<div class='tooltip hidden'></div>");
+    // $chart.append($tooltip);
 
-    $chart.off("mousemove", ".stick,.bar");
-    $chart.off("mouseleave", ".stick,.bar");
+    // $chart.off("mousemove", ".stick,.bar");
+    // $chart.off("mouseleave", ".stick,.bar");
 
-    $chart.on("mousemove", ".stick,.bar", function (e) {
-      let cData = $(this).data("candle");
-      if (!cData) return;
+    // $chart.on("mousemove", ".stick,.bar", function (e) {
+    //   let cData = $(this).data("candle");
+    //   if (!cData) return;
 
-      $tooltip.html(`
-        O: ${cData.open}<br/>
-        H: ${cData.high}<br/>
-        L: ${cData.low}<br/>
-        C: ${cData.close}
-      `);
+    //   $tooltip.html(`
+    //     O: ${cData.open}<br/>
+    //     H: ${cData.high}<br/>
+    //     L: ${cData.low}<br/>
+    //     C: ${cData.close}
+    //   `);
 
-      $tooltip.removeClass("hidden");
+    //   $tooltip.removeClass("hidden");
 
-      let offset = $chart.offset();
-      $tooltip.css({
-        left: e.pageX - offset.left + 10 + "px",
-        top: e.pageY - offset.top + 10 + "px",
-      });
-    });
+    //   let offset = $chart.offset();
+    //   $tooltip.css({
+    //     left: e.pageX - offset.left + 10 + "px",
+    //     top: e.pageY - offset.top + 10 + "px",
+    //   });
+    // });
 
-    $chart.on("mouseleave", ".stick,.bar", function () {
-      $tooltip.addClass("hidden");
-    });
+    // $chart.on("mouseleave", ".stick,.bar", function () {
+    //   $tooltip.addClass("hidden");
+    // });
   }
 
-  let twoDaysData = [
-    {
-      open: 28951.7,
-      high: 29627.1,
-      low: 28712.4,
-      close: 29359.9,
-    },
-    {
-      open: 29359.7,
-      high: 33233.5,
-      low: 29008.0,
-      close: 32193.3,
-    },
-  ];
+  function getCandlestickDataForCoin(coinCode, dayRange, currentDay) {
+    // Ensure currentDay is within range
+    if (currentDay < dayRange) {
+      dayRange = currentDay; // Adjust to avoid fetching unavailable days
+    }
 
-  // Immediately render just those 2 candlesticks
-  renderCandlestickChart(twoDaysData, "#candlestick-chart");
+    // Filter data for the specified range of days
+    const filteredDays = market.slice(currentDay - dayRange, currentDay);
+
+    // Map the data to extract candlestick information for the selected coin
+    const coinData = filteredDays.map((day) => {
+      const coinInfo = day.coins.find(
+        (coin) => coin.code === coinCode.toLowerCase()
+      );
+      return {
+        open: coinInfo.open,
+        high: coinInfo.high,
+        low: coinInfo.low,
+        close: coinInfo.close,
+      };
+    });
+
+    return coinData;
+  }
+
+  $(".coin-option").on("click", function () {
+    const selectedCoin = $(this).data("coin");
+    currentProfile.selectedCoin = selectedCoin; // Update the selected coin
+    const candleData = getCandlestickDataForCoin(
+      selectedCoin,
+      120,
+      currentProfile.currentDay
+    );
+    renderCandlestickChart(candleData, "#candlestick-chart");
+  });
 
   updateUI();
 });
