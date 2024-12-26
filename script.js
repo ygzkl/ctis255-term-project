@@ -169,6 +169,8 @@ $(function () {
     $("#current-day").text(currentProfile.currentDay);
     $("#current-date").text(calculateDateFromDay(currentProfile.currentDay));
     $(`.coin-option[data-coin="${currentProfile.selectedCoin}"]`).addClass("selected");
+
+    console.log(`Selected coin: ${currentProfile.selectedCoin}`);
   }
 
   // it changes to the next day until the end of the sim
@@ -390,6 +392,7 @@ $(function () {
     timer = setInterval(() => {
       if(currentProfile.currentDay<END_DAY){
         currentProfile.currentDay++;
+        saveProfiles();
         updateUI();
       }
       else{
@@ -403,6 +406,8 @@ $(function () {
     $(this).attr("disabled", true);
     $("#play-btn").attr("disabled", false);
     clearInterval(timer);
+    
+
   });
 
 
