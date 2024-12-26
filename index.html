@@ -1,68 +1,113 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>2024 - Fall - Project</title>
-    <link rel="stylesheet" href="style.css">
+    <script src="db.js"></script>
+    <link rel="stylesheet" href="style.css" />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="script.js"></script>
-</head>
+  </head>
 
-
-
-<body>
-
-    <!-- Initial Page --> 
+  <body>
+    <!-- Initial Page -->
     <div id="initial-page">
-        <div class="header-bar">
-            <div class="header-left">
-                <span class="site-title">CTIS <span>Crypto Trading Information System</span></span>
-            </div>
-            <div class="header-right hidden">
-                <span class="username" id="current-profile-name"></span>
-                <button id="logout-btn" class="logout-btn">Logout</button>
-              </div>
+      <div class="header-bar">
+        <div class="header-left">
+          <span class="site-title"
+            >CTIS <span>Crypto Trading Information System</span></span
+          >
+        </div>
+        <div class="header-right hidden">
+          <span class="username" id="current-profile-name"></span>
+          <button id="logout-btn" class="logout-btn">Logout</button>
+        </div>
+      </div>
+
+      <div class="team-members-page">
+        <h2>Team Members</h2>
+        <ul>
+          <li>Hasan Hüseyin Balbıçak</li>
+          <li>Efe Baran Durmaz</li>
+          <li>Yağız Emir Kula</li>
+          <li>Muhammed Talha Nalbant</li>
+        </ul>
+        <button id="continue-to-profiles">Continue</button>
+      </div>
+
+      <!-- Profile Selection Page -->
+      <div class="profile-page hidden">
+        <div id="add-box" class="hidden" class="profile">
+          <h4>New Profile</h4>
+          <input
+            type="text"
+            id="new-profile-name"
+            placeholder="Enter new profile..."
+          />
+          <br />
+          <button id="add-profile-btn">Add</button>
         </div>
 
+        <div class="profile-list"></div>
 
-        <div class="team-members-page">
-            <h2>Team Members</h2>
-            <ul>
-                <li>Hasan Hüseyin Balbıçak</li>
-                <li>Efe Baran Durmaz</li>
-                <li>Yağız Emir Kula</li>
-                <li>Muhammed Talha Nalbant</li>
-            </ul>
-          <button id="continue-to-profiles">Continue</button>
+        <button id="new-profile-btn">New Profile</button>
+      </div>
+
+      <div class="main-content hidden">
+        <!-- date related containers -->
+        <h1>Day <span id="current-day"></span></h1>
+        <div class="date-text" id="current-date"></div>
+        <!-- button containers -->
+        <div class="day-controls">
+          <button id="next-day-btn" class="day-btn">Next Day</button>
+          <button id="play-btn" class="day-btn">Play</button>
+          <button id="stop-play-btn" class="day-btn">Pause</button>
         </div>
-        
-        
-
-        <!-- Profile Selection Page -->
-        <div class="profile-page hidden">
-            
-            <div id = "add-box" class="hidden" class="profile">
-                <h4>New Profile</h4>
-                <input type="text" id="new-profile-name" placeholder="Enter new profile..." >
-                <br>
-                <button id="add-profile-btn">Add</button>
-            </div>
-
-            <div class="profile-list">         
-            </div>
-
-            <button id="new-profile-btn">New Profile</button>
+        <!-- coin selection bar -->
+        <div class="coin-selection-bar">
+          <div class="coin-option selected" data-coin="BTC">
+            <img src="images/btc.png" alt="Bitcoin" />
+          </div>
+          <div class="coin-option" data-coin="ETH">
+            <img src="images/eth.png" alt="Ethereum" />
+          </div>
+          <div class="coin-option" data-coin="ADA">
+            <img src="images/ada.png" alt="Cardano" />
+          </div>
+          <div class="coin-option" data-coin="XRP">
+            <img src="images/xrp.png" alt="Ripple" />
+          </div>
+          <div class="coin-option" data-coin="DOGE">
+            <img src="images/doge.png" alt="Dogecoin" />
+          </div>
+          <div class="coin-option" data-coin="AVAX">
+            <img src="images/avax.png" alt="Avalanche" />
+          </div>
+          <div class="coin-option" data-coin="TRX">
+            <img src="images/trx.png" alt="Tron" />
+          </div>
+          <div class="coin-option" data-coin="SNX">
+            <img src="images/snx.png" alt="Synthetix" />
+          </div>
+          <div class="coin-option" data-coin="POL">
+            <img src="images/pol.png" alt="Polygon" />
+          </div>
+        </div>
+        <div class="selected-coin-info">
+          <span id="selected-coin-name">Bitcoin</span>
+        </div>
+        <!-- end of the selection -->
+        <!-- start of the charts -->
+        <div class="chart-container">
+          <div class="chart" id="candlestick-chart">
+            <div class="last-close-line"></div>
+            <div class="tooltip hidden"></div>
+          </div>
         </div>
 
-        <div class="main-content hidden">
-
-        </div>
-        
-
+        <!-- end of the charts -->
+      </div>
     </div>
-
-    
-
-</body>
+  </body>
 </html>
