@@ -273,7 +273,10 @@ $(function () {
           });
      
 
-
+      // [ ] stick gereksiz uzunluk ve yüksek konusunda hata veriyor 
+      // [ ] priceToY fonksiyonu düzgün çalışmıyor zaman ilerledikçe hepsi oturuyor 
+      // ama öncesinde düzgün çalışmıyor 
+      
       // "bar" = the rectangle from open to close
 
       let $bar;
@@ -299,6 +302,8 @@ $(function () {
     let $lastClose = $("<div class='last-close-line'></div>").css({
       top: lastCloseY + "px",
     });
+
+
     // .text(lastCandle.close.toFixed(2))
     $chart.append($lastClose);
 
