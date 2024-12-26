@@ -244,7 +244,8 @@ $(".profile-list").on("click", ".user-wallet-link", function (e) {
 
   let timer;
   $("#play-btn").on("click", function () {
-    
+    $(this).attr("disabled", true);
+    $("#stop-play-btn").attr("disabled", false);
     timer = setInterval(() => {
       if(currentProfile.currentDay<END_DAY){
         currentProfile.currentDay++;
@@ -258,6 +259,8 @@ $(".profile-list").on("click", ".user-wallet-link", function (e) {
   });
 
   $("#stop-play-btn").on("click", function () {
+    $(this).attr("disabled", true);
+    $("#play-btn").attr("disabled", false);
     clearInterval(timer);
   });
 
