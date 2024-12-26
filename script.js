@@ -264,6 +264,8 @@ $(".profile-list").on("click", ".user-wallet-link", function (e) {
     clearInterval(timer);
   });
 
+  
+
 });
 
 

@@ -272,6 +272,7 @@ button {
 }
 .trading-panel h3 {
   margin-top:0;
+  text-align: center;
 }
 .trade-box {
   margin-bottom:10px;
@@ -326,12 +327,20 @@ button {
 #buttons{
   display: flex;
   height: max-content;
+  margin-bottom: 10px;
   background: white;
   border-radius: 20px;
   border: 2px solid #fff;
 }
 
 #buttons button{
+  margin: 0px;
+  border-radius: 20px;
+  background-color: #fff;
+  border: 0px solid #fff;
+}
+
+#process-btn{
   margin: 0px;
   border-radius: 20px;
   background-color: #fff;
