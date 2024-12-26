@@ -27,6 +27,7 @@ $(function () {
         initialMoney: 1000,
         currentDay: 2,
         coins: {},
+        selectedCoin: "BTC",
       });
       console.log("profile info" + profiles);
     }
@@ -75,39 +76,47 @@ $(function () {
     renderProfiles();
   });
 
-$(".profile-list").on("click", ".user-wallet-link", function (e) {
+  $(".profile-list").on("click", ".user-wallet-link", function (e) {
     e.preventDefault();
     const name = $(this).data("name");
-  
+
+    
+
     // Find the profile by name
     currentProfile = profiles.find((profile) => profile.name === name);
-  
+    coinName = coins.find(coin => coin.code === currentProfile.selectedCoin.toLowerCase()).name;
     if (currentProfile) {
       console.log(currentProfile);
       //console.log(name);
-  
+
       $(".profile-page").addClass("hidden");
       $(".main-content").removeClass("hidden");
       $(".header-right").removeClass("hidden");
       $("#current-profile-name").text(currentProfile.name);
       $(".bottom-section").removeClass("hidden")
       $("#initial-page").css("height", "150vh");
+      $("#selected-coin-name").text(coinName);
+
+      if(isBuy)
+        $("#process-btn").text("Buy").append(` ${coinName}`);
+      else
+        $("#process-btn").text("Sell").append(` ${coinName}`);
+
+
       updateUI();
     } else {
-        console.error("Profile not found!");
-      }
-    });
+      console.error("b not found!");
+    }
+  });
 
   $(".header-right button").on("click", function () {
     $(".profile-page").removeClass("hidden");
     $(".header-right").addClass("hidden");
     $(".main-content").addClass("hidden");
-<<<<<<< HEAD
     $(".bottom-section").addClass("hidden")
     $("#initial-page").css("height", "100vh");
-=======
     $(".coin-option").removeClass("selected");
->>>>>>> 7522baffc0986516e041a259f1c899a85243abc5
+
   });
 
   //
@@ -116,9 +125,10 @@ $(".profile-list").on("click", ".user-wallet-link", function (e) {
   // constants
   const END_DAY = 365;
   const YEAR_START = new Date(2021, 0, 1);
-  let currentDay = START_DAY;
-  let selectedCoin = "BTC";
-  let coinName = coins.find(coin => coin.code === selectedCoin.toLowerCase()).name; 
+  console.log(currentProfile);
+  // let selectedCoin = "BTC";
+  // let coinName = coins.find(coin => coin.code === currentProfile.selectedCoin.toLowerCase()).name; 
+  let coinName = "Bitcoin";
 
   $("#buy-btn").css("background", "green");
   $("#buttons").css("border-color", "green");
@@ -135,22 +145,30 @@ $(".profile-list").on("click", ".user-wallet-link", function (e) {
       year: "numeric",
     });
   }
-  function updateUI() {
-    $("#current-day").text(currentProfile.currentDay);
-    $("#current-date").text(calculateDateFromDay(currentProfile.currentDay));
 
-    $(`.coin-option[data-coin="${currentProfile.selectedCoin}"]`).addClass(
-      "selected"
-    );
-    // display the coin name
+  // function updateUI() {
+  //   $("#current-day").text(currentProfile.currentDay);
+  //   $("#current-date").text(calculateDateFromDay(currentProfile.currentDay));
+
+  //   $(`.coin-option[data-coin="${currentProfile.selectedCoin}"]`).addClass(
+  //     "selected"
+  //   );
+  //   // display the coin name
     
 
-    const candleData = getCandlestickDataForCoin(
-      currentProfile.selectedCoin,
-      2, // how the last 2 days of data
-      currentProfile.currentDay
-    );
-    renderCandlestickChart(candleData, "#candlestick-chart");
+  //   const candleData = getCandlestickDataForCoin(
+  //     currentProfile.selectedCoin,
+  //     2, // how the last 2 days of data
+  //     currentProfile.currentDay
+  //   );
+  //   renderCandlestickChart(candleData, "#candlestick-chart");
+  // }
+
+  function updateUI(){
+    if (!currentProfile) return;
+    $("#current-day").text(currentProfile.currentDay);
+    $("#current-date").text(calculateDateFromDay(currentProfile.currentDay));
+    $(`.coin-option[data-coin="${currentProfile.selectedCoin}"]`).addClass("selected");
   }
 
   // it changes to the next day until the end of the sim
@@ -172,49 +190,16 @@ $(".profile-list").on("click", ".user-wallet-link", function (e) {
     }
   });
 
-  //
-  //    COIN SELECTION BUTTONS
-  //
-  //
-  /* function coinFullName(coin) {
-    switch (coin) {
-      case "BTC":
-        return "Bitcoin";
-      case "ETH":
-        return "Ethereum";
-      case "ADA":
-        return "Cardano";
-      case "XRP":
-        return "Ripple";
-      case "DOGE":
-        return "Dogecoin";
-      case "AVAX":
-        return "Avalanche";
-      case "TRX":
-        return "Tron";
-      case "SNX":
-        return "Synthetix";
-      case "POL":
-        return "Polygon";
-      default:
-        return coin;
-    }
-  } */
-
   var isBuy = true;
 
   $(".coin-option").on("click", function () {
-<<<<<<< HEAD
-    selectedCoin = $(this).data("coin");
-    coinName = coins.find(coin => coin.code === selectedCoin.toLowerCase()).name;
-    //console.log(coinName);
-
-=======
     currentProfile.selectedCoin = $(this).data("coin");
->>>>>>> 7522baffc0986516e041a259f1c899a85243abc5
+    coinName = coins.find(coin => coin.code === currentProfile.selectedCoin.toLowerCase()).name;
+    //console.log(coinName);    
     $(".coin-option").removeClass("selected");
     $(this).addClass("selected");
 
+    
 
     $("#selected-coin-name").text(coinName);
     // update the new coin name
@@ -228,9 +213,6 @@ $(".profile-list").on("click", ".user-wallet-link", function (e) {
       $("#process-btn").text("Sell").append(` ${coinName}`);
     }
     
-=======
-    // update the new coin name
-    $("#selected-coin-name").text(coinFullName(currentProfile.selectedCoin));
 
     console.log(`Selected coin updated to: ${currentProfile.selectedCoin}`);
     // $(".coin-option").removeClass("selected");
@@ -238,9 +220,6 @@ $(".profile-list").on("click", ".user-wallet-link", function (e) {
     $(`.coin-option[data-coin="${currentProfile.selectedCoin}"]`).addClass(
       "selected"
     );
-    // display the coin name
-    $("#selected-coin-name").text(coinFullName(currentProfile.selectedCoin));
->>>>>>> 7522baffc0986516e041a259f1c899a85243abc5
   });
 
   //
@@ -275,7 +254,7 @@ $(".profile-list").on("click", ".user-wallet-link", function (e) {
     // 3) Draw each candle
     let xPos = 0; // start from left
     candles.forEach((c) => {
-      let yOpen = priceToY(o.open);
+      let yOpen = priceToY(c.open);
       let yClose = priceToY(c.close);
       let yHigh = priceToY(c.high);
       let yLow = priceToY(c.low);
@@ -373,17 +352,16 @@ $(".profile-list").on("click", ".user-wallet-link", function (e) {
   }
 
   $(".coin-option").on("click", function () {
-    const selectedCoin = $(this).data("coin");
-    currentProfile.selectedCoin = selectedCoin; // Update the selected coin
+    currentProfile.selectedCoin = $(this).data("coin"); // Update the selected coin
     const candleData = getCandlestickDataForCoin(
-      selectedCoin,
+      currentProfile.selectedCoin,
       120,
       currentProfile.currentDay
     );
     renderCandlestickChart(candleData, "#candlestick-chart");
   });
 
-  updateUI();
+  //updateUI();
 
 
   $("#buy-btn").on("click", function () {
