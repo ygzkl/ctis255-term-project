@@ -112,7 +112,7 @@ $(".profile-list").on("click", ".user-wallet-link", function (e) {
   const YEAR_START = new Date(2021, 0, 1);
   let currentDay = START_DAY;
   let selectedCoin = "BTC";
-  let coinName = coins.find(coin => coin.code === selectedCoin.toLowerCase())?.name || "Coin not found"; 
+  let coinName = coins.find(coin => coin.code === selectedCoin.toLowerCase()).name; 
 
   $("#buy-btn").css("background", "green");
   $("#buttons").css("border-color", "green");
@@ -196,7 +196,7 @@ $(".profile-list").on("click", ".user-wallet-link", function (e) {
 
   $(".coin-option").on("click", function () {
     selectedCoin = $(this).data("coin");
-    coinName = coins.find(coin => coin.code === selectedCoin.toLowerCase())?.name || "Coin not found";
+    coinName = coins.find(coin => coin.code === selectedCoin.toLowerCase()).name;
     //console.log(coinName);
 
     $(".coin-option").removeClass("selected");
@@ -214,6 +214,7 @@ $(".profile-list").on("click", ".user-wallet-link", function (e) {
     } else {
       $("#process-btn").text("Sell").append(` ${coinName}`);
     }
+    
   });
   //
   // chartstick implementation
@@ -264,7 +265,7 @@ $(".profile-list").on("click", ".user-wallet-link", function (e) {
     clearInterval(timer);
   });
 
-  
+
 
 });
 
