@@ -229,83 +229,84 @@ $(function () {
   function renderCandlestickChart(candles, containerSelector) {
     const $chart = $(containerSelector);
     const chartEl = $chart[0];
-
+  
+    // Clear previous chart elements
     $chart.empty();
-
+  
+    // 1) Get min and max prices for scaling
     let allPrices = [];
     candles.forEach((c) => {
       allPrices.push(c.low, c.high, c.open, c.close);
     });
     let minP = Math.min(...allPrices);
     let maxP = Math.max(...allPrices);
+  
     let padding = 15;
     let chartHeight = $chart.height();
-
-    // Convert a price to a Y-position in the chart
+  
+    // 2) A price -> Y-position scaling function
     function priceToY(price) {
       let ratio = (price - minP) / (maxP - minP);
       let scaled = ratio * (chartHeight - 2 * padding);
       return chartHeight - padding - scaled;
     }
-
+  
+    // Alternate scale function
+    let scale = (val) => {
+      return ((val - minP) / (maxP - minP)) * (chartHeight - 20) + 10;
+    };
+  
     // 3) Draw each candle
     let xPos = 0; // start from left
     candles.forEach((c) => {
-      let yOpen = priceToY(c.open);
-      let yClose = priceToY(c.close);
-      let yHigh = priceToY(c.high);
-      let yLow = priceToY(c.low);
-
-      // Candle color: green if close>open, red if close<open, gray if equal
+      let yOpen = scale(c.open);
+      let yClose = scale(c.close);
+      let yHigh = scale(c.high);
+      let yLow = scale(c.low);
+  
+      // Candle color
       let color =
         c.close > c.open ? "green" : c.close < c.open ? "red" : "gray";
-
+  
+      let $candle = $("<div class='candle'></div>").data("candle", c);
+  
       // "stick" = the line from low to high
-      let $stick;
-      
-        $stick = $("<div>")
-          .addClass("stick")
-          .css({
-            left: xPos - 2.50 + "px",
-            bottom: yLow  - $(".bar").height() + "px",
-            top: yHigh + $(".bar").height() + "px",
-            height: Math.abs(yLow - yHigh) + "px" // Corrected height calculation
-          });
-     
-
-      // [ ] stick gereksiz uzunluk ve yüksek konusunda hata veriyor 
-      // [ ] priceToY fonksiyonu düzgün çalışmıyor zaman ilerledikçe hepsi oturuyor 
-      // ama öncesinde düzgün çalışmıyor 
-      
+      let $stick = $("<div>")
+        .addClass("stick")
+        .css({
+          left: xPos - 2.5 + "px",
+          bottom: yLow + "px",
+          height: Math.abs(yLow - yHigh) + "px",
+        });
+  
       // "bar" = the rectangle from open to close
-
-      let $bar;
-
-      $bar = $("<div>")
+      let $bar = $("<div>")
         .addClass("bar")
         .css({
           background: color,
           left: xPos - 5 + "px",
-          bottom: Math.max(yOpen, yClose)  + "px",
-          top: Math.min(yOpen, yClose) + "px",
+          bottom: Math.min(yOpen, yClose) + "px",
           height: Math.abs(yClose - yOpen) + "px",
         });
-      
-
-      // Append to chart
-      $chart.append($stick);
-      $chart.append($bar);
-      xPos += $("#candlestick-chart").width() / 120;
+  
+      // Append to the candle container
+      $candle.append($stick).append($bar);
+  
+      // Append the candle to the chart
+      $chart.append($candle);
+  
+      // Increase xPos so next candle doesn't overlap
+      xPos += $chart.width() / 120;
     });
-
-    let lastCloseY = priceToY(candles[candles.length - 1].close);
+  
+    // 4) Draw last-close line
+    let lastClose = candles[candles.length - 1].close;
+    let lastCloseY = priceToY(lastClose);
     let $lastClose = $("<div class='last-close-line'></div>").css({
       top: lastCloseY + "px",
     });
-
-
-    // .text(lastCandle.close.toFixed(2))
     $chart.append($lastClose);
+  
 
     // // 5) Tooltip logic (hover)
     // let $tooltip = $("<div class='tooltip hidden'></div>");
