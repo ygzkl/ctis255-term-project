@@ -277,7 +277,9 @@ $(function () {
           left: xPos - 2.5 + "px",
           bottom: yLow + "px",
           height: Math.abs(yLow - yHigh) + "px",
-        });
+        })
+
+        .data("candle", c);
   
       // "bar" = the rectangle from open to close
       let $bar = $("<div>")
@@ -287,7 +289,9 @@ $(function () {
           left: xPos - 4 + "px",
           bottom: Math.min(yOpen, yClose) + "px",
           height: Math.abs(yClose - yOpen) + "px",
-        });
+        })
+
+        .data("candle", c);
   
       // Append to the candle container
       $candle.append($stick).append($bar);
@@ -310,38 +314,35 @@ $(function () {
       top: adjustedLastCloseY + "px",
     });
     $chart.append($lastClose);
-  
-
-    // // 5) Tooltip logic (hover)
-    // let $tooltip = $("<div class='tooltip hidden'></div>");
-    // $chart.append($tooltip);
-
-    // $chart.off("mousemove", ".stick,.bar");
-    // $chart.off("mouseleave", ".stick,.bar");
-
-    // $chart.on("mousemove", ".stick,.bar", function (e) {
-    //   let cData = $(this).data("candle");
-    //   if (!cData) return;
-
-    //   $tooltip.html(`
-    //     O: ${cData.open}<br/>
-    //     H: ${cData.high}<br/>
-    //     L: ${cData.low}<br/>
-    //     C: ${cData.close}
-    //   `);
-
-    //   $tooltip.removeClass("hidden");
-
-    //   let offset = $chart.offset();
-    //   $tooltip.css({
-    //     left: e.pageX - offset.left + 10 + "px",
-    //     top: e.pageY - offset.top + 10 + "px",
-    //   });
-    // });
-
-    // $chart.on("mouseleave", ".stick,.bar", function () {
-    //   $tooltip.addClass("hidden");
-    // });
+    
+    // 5) Tooltip logic (hover)
+    let $tooltip = $("<div class='tooltip hidden'></div>");
+    $chart.append($tooltip);
+    
+    $chart.off("mousemove mouseleave", ".stick, .bar");
+    $chart.on("mousemove", ".stick, .bar", function (e) {
+      let cData = $(this).data("candle");
+      if (!cData) return;
+    
+      $tooltip.html(`
+        O: ${cData.open}<br/>
+        H: ${cData.high}<br/>
+        L: ${cData.low}<br/>
+        C: ${cData.close}
+      `);
+    
+      $tooltip.removeClass("hidden");
+    
+      let offset = $chart.offset();
+      $tooltip.css({
+        left: e.pageX - offset.left + 10 + "px",
+        top: e.pageY - offset.top + 10 + "px",
+      });
+    });
+    
+    $chart.on("mouseleave", ".stick,.bar", function () {
+      $tooltip.addClass("hidden");
+    });
   }
 
   function getCandlestickDataForCoin(coinCode, dayRange, currentDay) {
