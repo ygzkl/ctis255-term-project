@@ -440,6 +440,15 @@ function updateUI() {
     "selected"
   );
 
+  $(".dolar").html(`
+    
+    <td>Dollar</td>
+    
+    <td>${currentProfile.cash}</td>
+    
+    `
+)
+
   console.log(`Selected coin: ${currentProfile.selectedCoin}`);
 }
 
@@ -495,18 +504,59 @@ function sellCoins() {
 
 function updateWalletDisplay() {
   let totalValue = currentProfile.cash;
-  $("wallet-coins").empty();
+  let coin = currentProfile.selectedCoin;
+  $("#wallet-coins").empty();
+  $(".dolar").empty();
+ 
+  
+  $(".dolar").html(`
+    
+    <td>Dollar</td>
+    
+    <td>${currentProfile.cash}</td>
+    
+    `
+)
+
   for (let c in currentProfile.coins) {
     let amount = currentProfile.coins[c];
     if (amount > 0) {
-  let lastData = getDayData(c, currentProfile.currentDay);
-  let val = lastData.close * amount;
-  totalValue += val;
-  $("wallet-coins").append(`<li>${c}: ${amount} (Value: $${val.toFixed(2)})</li>`);
+  
+    let marketData = market[currentProfile.currentDay - 1];
+    let coinData = marketData.coins.find(c => c.code === coin.toLowerCase());
+    
+    let val = coinData.close * amount;
+    totalValue += val;
+      
+
+  
+
+// $("#wallet-coins").append(`
+//    <tr>
+//     <td>${currentProfile.selectedCoin.img}</td>
+//     </tr>
+
+//     <tr>
+//     <td>${val}</td>
+//     </tr>
+
+//     <tr>
+//     <td>Dollar</td>
+//     </tr>
+
+//     <tr>
+//     <td>${currentProfile.cash}</td>
+//     </tr>
+
+//     `
+// )
+
+  $("#wallet-coins").append(`<tr><td>${c}: ${amount} (Value: $${val.toFixed(2)})</td></tr>`);
+
     }
   }
-  $walletCash.text(currentProfile.cash.toFixed(2));
-  $walletTotal.text(totalValue.toFixed(2));
+  // $walletCash.text(currentProfile.cash.toFixed(2));
+  // $walletTotal.text(totalValue.toFixed(2));
 }
 
 

@@ -319,13 +319,15 @@ button {
   border-collapse:collapse;
   font-size:14px;
 }
+
+.wallet-panel table thead{
+  background: #99f;
+}
+
 .wallet-panel th, .wallet-panel td {
-  border:1px solid #ccc;
+  
   padding:5px;
   text-align:center;
-}
-.wallet-panel th {
-  background:#eee;
 }
 
 #buttons{
@@ -349,4 +351,8 @@ button {
   border-radius: 20px;
   background-color: #fff;
   border: 0px solid #fff;
+}
+
+.dolar{
+  background: #9f9;
 }
