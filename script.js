@@ -429,7 +429,84 @@ $(function () {
     $("#play-btn").attr("disabled", false);
     clearInterval(timer);
   });
+
+  $("#process-btn").on("click", function () {
+    if (isBuy) {
+      buyCoins();
+    } else {
+      sellCoins();
+    }
+  });
+      
 });
+
+
+function buyCoins() {
+  let coinAmount = parseFloat($("#amount").val());
+  if (isNaN(coinAmount) || coinAmount <= 0) {
+    alert("Enter a valid amount of coins");
+    return;
+  }
+  let coin = currentProfile.selectedCoin;
+  let marketData = market[currentProfile.currentDay - 1];
+  let coinData = marketData.coins.find(c => c.code === coin.toLowerCase());
+  
+  console.log(coinData.close);
+
+  if (!coinData) return;
+  let price = coinData.close;
+  let cost = coinAmount * price;
+  if (cost <= currentProfile.cash) {
+    currentProfile.cash -= cost;
+    currentProfile.coins[coin] = (currentProfile.coins[coin] || 0) + coinAmount;
+    updateUI();
+    saveProfiles();
+    updateWalletDisplay();
+  } else {
+    alert("Not enough cash to buy");
+  }
+}
+
+function sellCoins() {
+  let coinAmount = parseFloat($("#amount").val());
+  if (isNaN(coinAmount) || coinAmount <= 0) {
+    alert("Enter a valid amount of coins");
+    return;
+  }
+  let coin = currentProfile.selectedCoin;
+  let marketData = market[currentProfile.currentDay - 1];
+  let coinData = marketData.coins.find(c => c.code === coin.toLowerCase());
+
+  let price = coinData.close;
+  let revenue = coinAmount * price;
+  let hodl = currentProfile.coins[coin] || 0;
+  if (coinAmount <= hodl) {
+    currentProfile.cash += revenue;
+    currentProfile.coins[coin] = hodl - coinAmount;
+    updateUI();
+    saveProfiles();
+    updateWalletDisplay();
+  } else {
+    alert("Not enough coins to sell");
+  }
+}
+
+function updateWalletDisplay() {
+  let totalValue = currentProfile.cash;
+  $walletCoins.empty();
+  for (let c in currentProfile.coins) {
+    let amount = currentProfile.coins[c];
+    if (amount > 0) {
+  let lastData = getDayData(c, currentProfile.currentDay);
+  let val = lastData.close * amount;
+  totalValue += val;
+  $walletCoins.append(`<li>${c}: ${amount} (Value: $${val.toFixed(2)})</li>`);
+    }
+  }
+  $walletCash.text(currentProfile.cash.toFixed(2));
+  $walletTotal.text(totalValue.toFixed(2));
+}
+
 
 function saveProfiles() {
   localStorage.setItem("profiles", JSON.stringify(profiles));
