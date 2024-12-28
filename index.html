@@ -66,10 +66,10 @@
         </div>
         <!-- coin selection bar -->
         <div class="coin-selection-bar">
-          <div class="coin-option selected" data-coin="BTC">
+          <div class="coin-option selected" data-coin="BTC" data-coin-name  = "Bitcoin">
             <img src="images/btc.png" alt="Bitcoin" />
           </div>
-          <div class="coin-option" data-coin="ETH">
+          <div class="coin-option" data-coin="ETH" >
             <img src="images/eth.png" alt="Ethereum" />
           </div>
           <div class="coin-option" data-coin="ADA">
@@ -108,6 +108,40 @@
 
         <!-- end of the charts -->
       </div>
+
+      <div class="bottom-section hidden">
+
+        <div class="trading-panel trading-ui">
+          <h3>Trading</h3>
+          <div class="trade-box buy-box">
+            <div id = "buttons">
+              <button id = "buy-btn"><div>Buy</div></button>
+              <button id = "sell-btn"><div>Sell</div></button>
+            </div>
+            
+            <input type="number" id="amount" placeholder="Amount"/>
+            <button id="process-btn"></button>
+          </div>
+          
+        </div>
+
+        <div class="wallet-panel">
+          <h3>Wallet</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Coin</th>
+                <th>Amount</th>
+                <th>Subtotal</th>
+                <th>Last Close</th>
+              </tr>
+            </thead>
+            <tbody id="wallet-coins"></tbody>
+          </table>
+        </div>
+      </div>
+
+
     </div>
   </body>
 </html>

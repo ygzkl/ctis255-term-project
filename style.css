@@ -209,22 +209,26 @@ button {
   border: 1px solid #ccc;
   margin-bottom: 20px;
   margin-top: 20px;
+  overflow: hidden; 
 }
 
 .chart {
   position: relative;
   height: 300px;
+  width: 100%;
 }
 
 .stick {
   position: absolute;
-  width: 1px;
-  background: #999;
+  border: 1px solid black;
+  /* width: 0px; */
+  overflow: hidden;
 }
 
 .bar {
   position: absolute;
-  width: 10px;
+  width: 5.5px;
+  overflow: hidden; z-index: 1;
 }
 
 .last-close-line {
@@ -247,4 +251,102 @@ button {
 
 .tooltip.hidden {
   display: none;
+}
+
+
+/* Bottom Section */
+.bottom-section {
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  margin-top:20px;
+  margin-left: 50px;
+  margin-right: 50px;
+}
+
+.trading-panel {
+  background:#f7f7f7;
+  border:1px solid #ccc;
+  padding:10px;
+  max-width:200px;
+  flex:1;
+  text-align:left;
+  margin-right:10px;
+  width: 70%;
+}
+.trading-panel h3 {
+  margin-top:0;
+  text-align: center;
+}
+.trade-box {
+  margin-bottom:10px;
+}
+.trade-box label {
+  display:block;
+  font-weight:bold;
+  margin-bottom:5px;
+}
+.trade-box input {
+  width:90%;
+  padding:5px;
+  margin-bottom:5px;
+  border:1px solid #ccc;
+}
+.trade-box button {
+  width:100%;
+  padding:5px;
+  background:#ddd;
+  border:1px solid #aaa;
+  cursor:pointer;
+  font-size:14px;
+}
+.trade-box button:hover {
+  background:#ccc;
+}
+
+.wallet-panel {
+  background:#f7f7f7;
+  border:1px solid #ccc;
+  padding:10px;
+  flex:2;
+  margin-left:10px;
+}
+.wallet-panel h3 {
+  margin-top:0;
+}
+.wallet-panel table {
+  width:100%;
+  border-collapse:collapse;
+  font-size:14px;
+}
+.wallet-panel th, .wallet-panel td {
+  border:1px solid #ccc;
+  padding:5px;
+  text-align:center;
+}
+.wallet-panel th {
+  background:#eee;
+}
+
+#buttons{
+  display: flex;
+  height: max-content;
+  margin-bottom: 10px;
+  background: white;
+  border-radius: 20px;
+  border: 2px solid #fff;
+}
+
+#buttons button{
+  margin: 0px;
+  border-radius: 20px;
+  background-color: #fff;
+  border: 0px solid #fff;
+}
+
+#process-btn{
+  margin: 0px;
+  border-radius: 20px;
+  background-color: #fff;
+  border: 0px solid #fff;
 }

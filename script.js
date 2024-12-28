@@ -1,6 +1,10 @@
 let profiles = loadProfilesFromStorage();
 console.log(profiles);
 let currentProfile = null;
+ // constants
+ const END_DAY = 365;
+ const YEAR_START = new Date(2021, 0, 1);
+
 $(function () {
   // ----- Initial Page (Team Members) -----
   $("#continue-to-profiles").on("click", function () {
@@ -20,9 +24,10 @@ $(function () {
     else {
       profiles.push({
         name: $("#add-box input").val(),
-        initialMoney: 1000,
+        cash: 1000,
         currentDay: 2,
         coins: {},
+        selectedCoin: "BTC",
       });
       console.log("profile info" + profiles);
     }
@@ -52,7 +57,7 @@ $(function () {
                         
                             <button class="rmv-btn">Remove</button>
                             <h3>${profiles[i].name}</h3>
-                            <p>Initial Money: $${profiles[i].initialMoney}</p>
+                            
                         
                     </div>
                </a>
@@ -77,7 +82,9 @@ $(function () {
 
     // Find the profile by name
     currentProfile = profiles.find((profile) => profile.name === name);
-
+    coinName = coins.find(
+      (coin) => coin.code === currentProfile.selectedCoin.toLowerCase()
+    ).name;
     if (currentProfile) {
       console.log(currentProfile);
       //console.log(name);
@@ -86,9 +93,16 @@ $(function () {
       $(".main-content").removeClass("hidden");
       $(".header-right").removeClass("hidden");
       $("#current-profile-name").text(currentProfile.name);
+      $(".bottom-section").removeClass("hidden");
+      $("#initial-page").css("height", "150vh");
+      $("#selected-coin-name").text(coinName);
+
+      if (isBuy) $("#process-btn").text("Buy").append(` ${coinName}`);
+      else $("#process-btn").text("Sell").append(` ${coinName}`);
+
       updateUI();
     } else {
-      console.error("Profile not found!");
+      console.error("b not found!");
     }
   });
 
@@ -96,49 +110,54 @@ $(function () {
     $(".profile-page").removeClass("hidden");
     $(".header-right").addClass("hidden");
     $(".main-content").addClass("hidden");
+    $(".bottom-section").addClass("hidden");
+    $("#initial-page").css("height", "100vh");
     $(".coin-option").removeClass("selected");
   });
 
   //
   // DAY BUTTONS
   //
-  // constants
-  const END_DAY = 365;
-  const YEAR_START = new Date(2021, 0, 1);
+ 
+  console.log(currentProfile);
+  // let selectedCoin = "BTC";
+  // let coinName = coins.find(coin => coin.code === currentProfile.selectedCoin.toLowerCase()).name;
+  let coinName = "Bitcoin";
+
+  $("#buy-btn").css("background", "green");
+  $("#buttons").css("border-color", "green");
+  $("#process-btn")
+    .css("background", "green")
+    .text("Buy")
+    .append(` ${coinName}`);
+
   // date part of the next day button
-  function calculateDateFromDay(day) {
-    const date = new Date(YEAR_START.getTime());
-    date.setDate(date.getDate() + (day - 1)); // adjust for the given day
-    return date.toLocaleDateString("en-US", {
-      day: "numeric",
-      month: "long",
-      year: "numeric",
-    });
-  }
-  function updateUI() {
-    $("#current-day").text(currentProfile.currentDay);
-    $("#current-date").text(calculateDateFromDay(currentProfile.currentDay));
+ 
 
-    $(`.coin-option[data-coin="${currentProfile.selectedCoin}"]`).addClass(
-      "selected"
-    );
-    // display the coin name
-    $("#selected-coin-name").text(coinFullName(currentProfile.selectedCoin));
+  // function updateUI() {
+  //   $("#current-day").text(currentProfile.currentDay);
+  //   $("#current-date").text(calculateDateFromDay(currentProfile.currentDay));
 
-    const candleData = getCandlestickDataForCoin(
-      currentProfile.selectedCoin,
-      2, // how the last 2 days of data
-      currentProfile.currentDay
-    );
-    renderCandlestickChart(candleData, "#candlestick-chart");
-  }
+  //   $(`.coin-option[data-coin="${currentProfile.selectedCoin}"]`).addClass(
+  //     "selected"
+  //   );
+  //   // display the coin name
+
+  //   const candleData = getCandlestickDataForCoin(
+  //     currentProfile.selectedCoin,
+  //     2, // how the last 2 days of data
+  //     currentProfile.currentDay
+  //   );
+  //   renderCandlestickChart(candleData, "#candlestick-chart");
+  // }
+  let candleData;
 
   // it changes to the next day until the end of the sim
   $("#next-day-btn").on("click", function () {
     if (currentProfile.currentDay < END_DAY) {
       currentProfile.currentDay++;
       updateUI();
-      const candleData = getCandlestickDataForCoin(
+      candleData = getCandlestickDataForCoin(
         currentProfile.selectedCoin,
         120,
         currentProfile.currentDay
@@ -152,50 +171,34 @@ $(function () {
     }
   });
 
-  //
-  //    COIN SELECTION BUTTONS
-  //
-  //
-  function coinFullName(coin) {
-    switch (coin) {
-      case "BTC":
-        return "Bitcoin";
-      case "ETH":
-        return "Ethereum";
-      case "ADA":
-        return "Cardano";
-      case "XRP":
-        return "Ripple";
-      case "DOGE":
-        return "Dogecoin";
-      case "AVAX":
-        return "Avalanche";
-      case "TRX":
-        return "Tron";
-      case "SNX":
-        return "Synthetix";
-      case "POL":
-        return "Polygon";
-      default:
-        return coin;
-    }
-  }
+  var isBuy = true;
 
   $(".coin-option").on("click", function () {
     currentProfile.selectedCoin = $(this).data("coin");
+    coinName = coins.find(
+      (coin) => coin.code === currentProfile.selectedCoin.toLowerCase()
+    ).name;
+    //console.log(coinName);
     $(".coin-option").removeClass("selected");
+    $(this).addClass("selected");
 
+    $("#selected-coin-name").text(coinName);
     // update the new coin name
-    $("#selected-coin-name").text(coinFullName(currentProfile.selectedCoin));
+    // $("#selected-coin-name").text(coinFullName(selectedCoin));
 
-    console.log(`Selected coin updated to: ${currentProfile.selectedCoin}`);
+    //console.log(`Selected coin updated to: ${selectedCoin}`);
+
+    if (isBuy) {
+      $("#process-btn").text("Buy").append(` ${coinName}`);
+    } else {
+      $("#process-btn").text("Sell").append(` ${coinName}`);
+    }
+
     // $(".coin-option").removeClass("selected");
     // put the ring selection to the new coin
     $(`.coin-option[data-coin="${currentProfile.selectedCoin}"]`).addClass(
       "selected"
     );
-    // display the coin name
-    $("#selected-coin-name").text(coinFullName(currentProfile.selectedCoin));
   });
 
   //
@@ -216,21 +219,20 @@ $(function () {
     });
     let minP = Math.min(...allPrices);
     let maxP = Math.max(...allPrices);
-    let padding = 10;
+    let padding = 15;
     let chartHeight = $chart.height();
 
     // Convert a price to a Y-position in the chart
     function priceToY(price) {
       let ratio = (price - minP) / (maxP - minP);
       let scaled = ratio * (chartHeight - 2 * padding);
-      let y = chartHeight - padding - scaled;
-      return y;
+      return chartHeight - padding - scaled;
     }
 
     // 3) Draw each candle
     let xPos = 0; // start from left
     candles.forEach((c) => {
-      let yOpen = priceToY(o.open);
+      let yOpen = priceToY(c.open);
       let yClose = priceToY(c.close);
       let yHigh = priceToY(c.high);
       let yLow = priceToY(c.low);
@@ -240,66 +242,82 @@ $(function () {
         c.close > c.open ? "green" : c.close < c.open ? "red" : "gray";
 
       // "stick" = the line from low to high
-      let $stick = $("<div>")
-        .addClass("stick")
-        .css({
-          left: xPos + "px",
-          bottom: yLow + "px",
-          height: yHigh - yLow + "px",
-        });
+      let $stick;
+      
+        $stick = $("<div>")
+          .addClass("stick")
+          .css({
+            left: xPos - 2.50 + "px",
+            bottom: yLow  - $(".bar").height() + "px",
+            top: yHigh + $(".bar").height() + "px",
+            height: Math.abs(yLow - yHigh) + "px" // Corrected height calculation
+          });
+     
 
+      // [ ] stick gereksiz uzunluk ve yüksek konusunda hata veriyor 
+      // [ ] priceToY fonksiyonu düzgün çalışmıyor zaman ilerledikçe hepsi oturuyor 
+      // ama öncesinde düzgün çalışmıyor 
+      
       // "bar" = the rectangle from open to close
-      let $bar = $("<div>")
+
+      let $bar;
+
+      $bar = $("<div>")
         .addClass("bar")
         .css({
           background: color,
           left: xPos - 5 + "px",
-          bottom: Math.min(yOpen, yClose) + "px",
+          bottom: Math.max(yOpen, yClose)  + "px",
+          top: Math.min(yOpen, yClose) + "px",
           height: Math.abs(yClose - yOpen) + "px",
         });
+      
 
       // Append to chart
-      $chart.append($stick).append($bar);
-      xPos += 30;
+      $chart.append($stick);
+      $chart.append($bar);
+      xPos += $("#candlestick-chart").width() / 120;
     });
 
     let lastCloseY = priceToY(candles[candles.length - 1].close);
     let $lastClose = $("<div class='last-close-line'></div>").css({
       top: lastCloseY + "px",
     });
+
+
     // .text(lastCandle.close.toFixed(2))
     $chart.append($lastClose);
 
-    // // 5) Tooltip logic (hover)
-    // let $tooltip = $("<div class='tooltip hidden'></div>");
-    // $chart.append($tooltip);
+    // 5) Tooltip logic (hover)
+    let $tooltip = $("<div class='tooltip hidden'></div>");
+    $chart.append($tooltip);
 
-    // $chart.off("mousemove", ".stick,.bar");
-    // $chart.off("mouseleave", ".stick,.bar");
+    $chart.off("mousemove", ".stick,.bar");
+    $chart.off("mouseleave", ".stick,.bar");
 
-    // $chart.on("mousemove", ".stick,.bar", function (e) {
-    //   let cData = $(this).data("candle");
-    //   if (!cData) return;
+    $chart.on("mousemove", ".stick,.bar", function (e) {
+      let cData = $(this).data("candle");
+      if (!cData) return;
 
-    //   $tooltip.html(`
-    //     O: ${cData.open}<br/>
-    //     H: ${cData.high}<br/>
-    //     L: ${cData.low}<br/>
-    //     C: ${cData.close}
-    //   `);
+      $tooltip.html(`
+      O: ${cData.open}<br/>
+      H: ${cData.high}<br/>
+      L: ${cData.low}<br/>
+      C: ${cData.close}
+      `);
 
-    //   $tooltip.removeClass("hidden");
+      $tooltip.removeClass("hidden");
 
-    //   let offset = $chart.offset();
-    //   $tooltip.css({
-    //     left: e.pageX - offset.left + 10 + "px",
-    //     top: e.pageY - offset.top + 10 + "px",
-    //   });
-    // });
+      let offset = $chart.offset();
+      $tooltip.css({
+      left: e.pageX - offset.left + 10 + "px",
+      top: e.pageY - offset.top + 10 + "px",
+      });
+    });
 
-    // $chart.on("mouseleave", ".stick,.bar", function () {
-    //   $tooltip.addClass("hidden");
-    // });
+    $chart.on("mouseleave", ".stick,.bar", function () {
+      $tooltip.addClass("hidden");
+    });
   }
 
   function getCandlestickDataForCoin(coinCode, dayRange, currentDay) {
@@ -328,18 +346,169 @@ $(function () {
   }
 
   $(".coin-option").on("click", function () {
-    const selectedCoin = $(this).data("coin");
-    currentProfile.selectedCoin = selectedCoin; // Update the selected coin
-    const candleData = getCandlestickDataForCoin(
-      selectedCoin,
+    currentProfile.selectedCoin = $(this).data("coin"); // Update the selected coin
+    candleData = getCandlestickDataForCoin(
+      currentProfile.selectedCoin,
       120,
       currentProfile.currentDay
     );
     renderCandlestickChart(candleData, "#candlestick-chart");
   });
 
-  updateUI();
+  //updateUI();
+
+  $("#buy-btn").on("click", function () {
+    isBuy = true;
+    $(this).css("background", "green");
+    $("#buttons").css("border-color", "green");
+    $("#sell-btn").css("background", "#fff");
+    $("#process-btn")
+      .css("background", "green")
+      .text("Buy")
+      .append(` ${coinName}`);
+  });
+
+  $("#sell-btn").on("click", function () {
+    isBuy = false;
+    $(this).css("background", "red");
+    $("#buttons").css("border-color", "red");
+    $("#buy-btn").css("background", "#fff");
+    $("#process-btn")
+      .css("background", "red")
+      .text("Sell")
+      .append(` ${coinName}`);
+  });
+
+  let timer;
+  $("#play-btn").on("click", function () {
+    $(this).attr("disabled", true);
+    $("#stop-play-btn").attr("disabled", false);
+
+    timer = setInterval(() => {
+      if (currentProfile.currentDay < END_DAY) {
+        currentProfile.currentDay++;
+
+        candleData = getCandlestickDataForCoin(
+          currentProfile.selectedCoin,
+          120,
+          currentProfile.currentDay
+        );
+
+        renderCandlestickChart(candleData, "#candlestick-chart");
+
+        saveProfiles();
+        updateUI();
+      } else {
+        clearInterval(timer);
+        alert("End of the simulation!");
+      }
+    }, 100);
+  });
+
+  $("#stop-play-btn").on("click", function () {
+    $(this).attr("disabled", true);
+    $("#play-btn").attr("disabled", false);
+    clearInterval(timer);
+  });
+
+  $("#process-btn").on("click", function () {
+    if (isBuy) {
+      buyCoins();
+    } else {
+      sellCoins();
+    }
+  });
+      
 });
+
+function calculateDateFromDay(day) {
+  const date = new Date(YEAR_START.getTime());
+  date.setDate(date.getDate() + (day - 1)); // adjust for the given day
+  return date.toLocaleDateString("en-US", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
+}
+
+
+function updateUI() {
+  if (!currentProfile) return;
+  $("#current-day").text(currentProfile.currentDay);
+  $("#current-date").text(calculateDateFromDay(currentProfile.currentDay));
+  $(`.coin-option[data-coin="${currentProfile.selectedCoin}"]`).addClass(
+    "selected"
+  );
+
+  console.log(`Selected coin: ${currentProfile.selectedCoin}`);
+}
+
+function buyCoins() {
+  let coinAmount = parseFloat($("#amount").val());
+  if (isNaN(coinAmount) || coinAmount <= 0) {
+    alert("Enter a valid amount of coins");
+    return;
+  }
+  let coin = currentProfile.selectedCoin;
+  let marketData = market[currentProfile.currentDay - 1];
+  let coinData = marketData.coins.find(c => c.code === coin.toLowerCase());
+  
+  console.log(coinData.close);
+
+  if (!coinData) return;
+  let price = coinData.close;
+  let cost = coinAmount * price;
+  if (cost <= currentProfile.cash) {
+    currentProfile.cash -= cost;
+    currentProfile.coins[coin] = (currentProfile.coins[coin] || 0) + coinAmount;
+    updateUI();
+    saveProfiles();
+    updateWalletDisplay();
+  } else {
+    alert("Not enough cash to buy");
+  }
+}
+
+function sellCoins() {
+  let coinAmount = parseFloat($("#amount").val());
+  if (isNaN(coinAmount) || coinAmount <= 0) {
+    alert("Enter a valid amount of coins");
+    return;
+  }
+  let coin = currentProfile.selectedCoin;
+  let marketData = market[currentProfile.currentDay - 1];
+  let coinData = marketData.coins.find(c => c.code === coin.toLowerCase());
+
+  let price = coinData.close;
+  let revenue = coinAmount * price;
+  let hodl = currentProfile.coins[coin] || 0;
+  if (coinAmount <= hodl) {
+    currentProfile.cash += revenue;
+    currentProfile.coins[coin] = hodl - coinAmount;
+    updateUI();
+    saveProfiles();
+    updateWalletDisplay();
+  } else {
+    alert("Not enough coins to sell");
+  }
+}
+
+function updateWalletDisplay() {
+  let totalValue = currentProfile.cash;
+  $("wallet-coins").empty();
+  for (let c in currentProfile.coins) {
+    let amount = currentProfile.coins[c];
+    if (amount > 0) {
+  let lastData = getDayData(c, currentProfile.currentDay);
+  let val = lastData.close * amount;
+  totalValue += val;
+  $("wallet-coins").append(`<li>${c}: ${amount} (Value: $${val.toFixed(2)})</li>`);
+    }
+  }
+  $walletCash.text(currentProfile.cash.toFixed(2));
+  $walletTotal.text(totalValue.toFixed(2));
+}
+
 
 function saveProfiles() {
   localStorage.setItem("profiles", JSON.stringify(profiles));
