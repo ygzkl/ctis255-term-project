@@ -36,19 +36,7 @@ body {
   margin-left: 5px;
   color: #666;
 }
-/*   
-.logout-btn {
-  margin-left:10px;
-  font-size:12px;
-  background:#fff;
-  border:1px solid #ccc;
-  cursor:pointer;
-  padding:5px 10px;
-}
-.logout-btn:hover {
-  background:#eee;
-}
- */
+
 /* Initial Page */
 .team-members-page {
   max-width: 600px;
@@ -190,10 +178,25 @@ button {
 }
 .coin-option.selected {
   transform: scale(1.1);
-  border: 2px solid #333;
+  animation: pulse 1.5s infinite;
+
+  /* border: 2px solid #333; */
   border-radius: 5px;
   padding: 2px;
 }
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
 .selected-coin-info {
   font-weight: bold;
   margin-bottom: 10px;
@@ -319,13 +322,15 @@ button {
   border-collapse:collapse;
   font-size:14px;
 }
+
+.wallet-panel table thead{
+  background: #99f;
+}
+
 .wallet-panel th, .wallet-panel td {
-  border:1px solid #ccc;
+  
   padding:5px;
   text-align:center;
-}
-.wallet-panel th {
-  background:#eee;
 }
 
 #buttons{
@@ -349,4 +354,37 @@ button {
   border-radius: 20px;
   background-color: #fff;
   border: 0px solid #fff;
+}
+
+.dolar{
+  background: #9f9;
+}
+
+
+#wallet-coins img{
+
+  width: 30px;
+  height: 30px;
+  vertical-align: middle;
+  margin-right: 10px;
+}
+
+#total-value{
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  font-size: 40px;
+  font-weight: bold;
+}
+
+.coin-in-wallet{
+  display: flex;
+  justify-content: left;
+  line-height: 30px;
+}
+
+
+#amount {
+  border-radius: 10px;
+  width: 30%;
 }

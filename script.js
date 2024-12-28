@@ -25,7 +25,9 @@ $(function () {
       profiles.push({
         name: $("#add-box input").val(),
         cash: 1000,
+
         currentDay: 2,
+
         coins: {},
         selectedCoin: "BTC",
       });
@@ -281,7 +283,6 @@ $(function () {
     });
     $chart.append($lastClose);
 
-    
     // 5) Tooltip logic (hover)
     let $tooltip = $("<div class='tooltip hidden'></div>");
     $chart.append($tooltip);
@@ -306,7 +307,7 @@ $(function () {
         top: e.pageY - offset.top + 10 + "px",
       });
     });
-    
+
 
     $chart.on("mouseleave", ".stick,.bar", function () {
       $tooltip.addClass("hidden");
