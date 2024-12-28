@@ -284,7 +284,7 @@ $(function () {
         .addClass("bar")
         .css({
           background: color,
-          left: xPos - 5 + "px",
+          left: xPos - 4 + "px",
           bottom: Math.min(yOpen, yClose) + "px",
           height: Math.abs(yClose - yOpen) + "px",
         });
@@ -302,8 +302,12 @@ $(function () {
     // 4) Draw last-close line
     let lastClose = candles[candles.length - 1].close;
     let lastCloseY = priceToY(lastClose);
+    
+    // Adjust the Y-coordinate if necessary
+    let adjustedLastCloseY = lastCloseY; // Adjust this value as needed
+    
     let $lastClose = $("<div class='last-close-line'></div>").css({
-      top: lastCloseY + "px",
+      top: adjustedLastCloseY + "px",
     });
     $chart.append($lastClose);
   
