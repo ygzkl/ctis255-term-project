@@ -182,6 +182,8 @@ $(function () {
     ).name;
     //console.log(coinName);
     $(".coin-option").removeClass("selected");
+    $("#amount").val("");
+    $("#amount-value").html(`= $`);
     $(this).addClass("selected");
 
     $("#selected-coin-name").text(coinName);
@@ -540,9 +542,18 @@ function updateWalletDisplay() {
     let coinImage = coins.find(coin => coin.code === c.toLowerCase()).image;
     let coinName = coins.find(coin => coin.code === c.toLowerCase()).name;
     
+    
+    $("#amount-value").empty();
 
+    $("#amount").on("change", function () {
+      let c = market[currentProfile.currentDay].coins.find(coin => coin.code === currentProfile.selectedCoin.toLowerCase());
+      console.log(coinData)
+      $("#amount-value").html(`= $${$("#amount").val() * c.close}`);
+    });
+
+  
     out+= ` <tr>
-    <td><img src = "./images/${coinImage}">${coinName} </td>
+    <td class='coin-in-wallet'><img src = "./images/${coinImage}">${coinName} </td>
      
 
     
@@ -560,7 +571,7 @@ function updateWalletDisplay() {
 `
  
     }
-    $("#total-value").text(totalValue.toFixed(2));
+    $("#total-value").text("$" + totalValue.toFixed(2));
   }
   $("#wallet-coins").html(out);
   //$("#wallet-coins").append(out);
