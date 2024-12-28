@@ -25,7 +25,9 @@ $(function () {
       profiles.push({
         name: $("#add-box input").val(),
         cash: 1000,
-        currentDay: 1,
+
+        currentDay: 2,
+
         coins: {},
         selectedCoin: "BTC",
       });
@@ -136,23 +138,6 @@ $(function () {
 
   // date part of the next day button
  
-
-  // function updateUI() {
-  //   $("#current-day").text(currentProfile.currentDay);
-  //   $("#current-date").text(calculateDateFromDay(currentProfile.currentDay));
-
-  //   $(`.coin-option[data-coin="${currentProfile.selectedCoin}"]`).addClass(
-  //     "selected"
-  //   );
-  //   // display the coin name
-
-  //   const candleData = getCandlestickDataForCoin(
-  //     currentProfile.selectedCoin,
-  //     2, // how the last 2 days of data
-  //     currentProfile.currentDay
-  //   );
-  //   renderCandlestickChart(candleData, "#candlestick-chart");
-  // }
   let candleData;
 
   // it changes to the next day until the end of the sim
@@ -166,7 +151,7 @@ $(function () {
         currentProfile.currentDay
       );
       renderCandlestickChart(candleData, "#candlestick-chart");
-      // // im using this instead of updateUI so it won't get affected by button changes
+      // im using this instead of updateUI so it won't get affected by button changes
       // $("#current-day").text(currentProfile.currentDay);
       // $("#current-date").text(calculateDateFromDay(currentProfile.currentDay));
     } else {
@@ -189,7 +174,6 @@ $(function () {
 
     $("#selected-coin-name").text(coinName);
     // update the new coin name
-    // $("#selected-coin-name").text(coinFullName(selectedCoin));
 
     //console.log(`Selected coin updated to: ${selectedCoin}`);
 
@@ -211,12 +195,14 @@ $(function () {
   //
   //
 
-  // 1) Basic chartstick rendering function
+
   function renderCandlestickChart(candles, containerSelector) {
     const $chart = $(containerSelector);
     const chartEl = $chart[0];
-
+  
+    //clear previous chart elements
     $chart.empty();
+  
 
     let allPrices = [];
     candles.forEach((c) => {
@@ -224,101 +210,104 @@ $(function () {
     });
     let minP = Math.min(...allPrices);
     let maxP = Math.max(...allPrices);
+  
     let padding = 15;
     let chartHeight = $chart.height();
-
-    // Convert a price to a Y-position in the chart
+  
     function priceToY(price) {
       let ratio = (price - minP) / (maxP - minP);
       let scaled = ratio * (chartHeight - 2 * padding);
       return chartHeight - padding - scaled;
     }
-
-    // 3) Draw each candle
-    let xPos = 0; // start from left
+  
+    // alternate scale function
+    let scale = (val) => {
+      return ((val - minP) / (maxP - minP)) * (chartHeight - 20) + 10;
+    };
+  
+    let xPos = 5; 
     candles.forEach((c) => {
-      let yOpen = priceToY(c.open);
-      let yClose = priceToY(c.close);
-      let yHigh = priceToY(c.high);
-      let yLow = priceToY(c.low);
-
-      // Candle color: green if close>open, red if close<open, gray if equal
+      let yOpen = scale(c.open);
+      let yClose = scale(c.close);
+      let yHigh = scale(c.high);
+      let yLow = scale(c.low);
+  
+      // Candle color
       let color =
         c.close > c.open ? "green" : c.close < c.open ? "red" : "gray";
-
+  
+      let $candle = $("<div class='candle'></div>").data("candle", c);
+  
       // "stick" = the line from low to high
-      let $stick;
-      
-        $stick = $("<div>")
-          .addClass("stick")
-          .css({
-            left: xPos - 2.50 + "px",
-            bottom: yLow  - $(".bar").height() + "px",
-            top: yHigh + $(".bar").height() + "px",
-            height: Math.abs(yLow - yHigh) + "px" // Corrected height calculation
-          });
-     
+      let $stick = $("<div>")
+        .addClass("stick")
+        .css({
+          left: xPos - 2.5 + "px",
+          bottom: yLow + "px",
+          height: Math.abs(yLow - yHigh) + "px",
+        })
 
-      // [ ] stick gereksiz uzunluk ve yüksek konusunda hata veriyor 
-      // [ ] priceToY fonksiyonu düzgün çalışmıyor zaman ilerledikçe hepsi oturuyor 
-      // ama öncesinde düzgün çalışmıyor 
-      
+        .data("candle", c);
+  
       // "bar" = the rectangle from open to close
-
-      let $bar;
-
-      $bar = $("<div>")
+      let $bar = $("<div>")
         .addClass("bar")
         .css({
           background: color,
-          left: xPos - 5 + "px",
-          bottom: Math.max(yOpen, yClose)  + "px",
-          top: Math.min(yOpen, yClose) + "px",
+          left: xPos - 4 + "px",
+          bottom: Math.min(yOpen, yClose) + "px",
           height: Math.abs(yClose - yOpen) + "px",
-        });
-      
+        })
 
-      // Append to chart
-      $chart.append($stick);
-      $chart.append($bar);
-      xPos += $("#candlestick-chart").width() / 120;
+        .data("candle", c);
+  
+
+      $candle.append($stick).append($bar);
+  
+
+      $chart.append($candle);
+  
+      // increase xPos so next candle doesn't overlap
+      xPos += $chart.width() / 120;
     });
+  
 
-    let lastCloseY = priceToY(candles[candles.length - 1].close);
+    let lastClose = candles[candles.length - 1].close;
+    let lastCloseY = priceToY(lastClose);
+    
+
+    let adjustedLastCloseY = lastCloseY; 
+    
     let $lastClose = $("<div class='last-close-line'></div>").css({
-      top: lastCloseY + "px",
+      top: adjustedLastCloseY + "px",
     });
-
-
-    // .text(lastCandle.close.toFixed(2))
     $chart.append($lastClose);
 
     // 5) Tooltip logic (hover)
     let $tooltip = $("<div class='tooltip hidden'></div>");
     $chart.append($tooltip);
-
-    $chart.off("mousemove", ".stick,.bar");
-    $chart.off("mouseleave", ".stick,.bar");
-
-    $chart.on("mousemove", ".stick,.bar", function (e) {
+    
+    $chart.off("mousemove mouseleave", ".stick, .bar");
+    $chart.on("mousemove", ".stick, .bar", function (e) {
       let cData = $(this).data("candle");
       if (!cData) return;
-
+    
       $tooltip.html(`
-      O: ${cData.open}<br/>
-      H: ${cData.high}<br/>
-      L: ${cData.low}<br/>
-      C: ${cData.close}
+        O: ${cData.open}<br/>
+        H: ${cData.high}<br/>
+        L: ${cData.low}<br/>
+        C: ${cData.close}
       `);
-
+    
       $tooltip.removeClass("hidden");
-
+    
       let offset = $chart.offset();
       $tooltip.css({
-      left: e.pageX - offset.left + 10 + "px",
-      top: e.pageY - offset.top + 10 + "px",
+        left: e.pageX - offset.left + 10 + "px",
+        top: e.pageY - offset.top + 10 + "px",
       });
     });
+
 
     $chart.on("mouseleave", ".stick,.bar", function () {
       $tooltip.addClass("hidden");
@@ -326,15 +315,15 @@ $(function () {
   }
 
   function getCandlestickDataForCoin(coinCode, dayRange, currentDay) {
-    // Ensure currentDay is within range
+
     if (currentDay < dayRange) {
-      dayRange = currentDay; // Adjust to avoid fetching unavailable days
+      dayRange = currentDay; 
     }
 
-    // Filter data for the specified range of days
+
     const filteredDays = market.slice(currentDay - dayRange, currentDay);
 
-    // Map the data to extract candlestick information for the selected coin
+
     const coinData = filteredDays.map((day) => {
       const coinInfo = day.coins.find(
         (coin) => coin.code === coinCode.toLowerCase()
@@ -351,7 +340,7 @@ $(function () {
   }
 
   $(".coin-option").on("click", function () {
-    currentProfile.selectedCoin = $(this).data("coin"); // Update the selected coin
+    currentProfile.selectedCoin = $(this).data("coin"); //update the selected coin
     candleData = getCandlestickDataForCoin(
       currentProfile.selectedCoin,
       120,
@@ -361,7 +350,7 @@ $(function () {
   });
 
   //updateUI();
-
+ 
   $("#buy-btn").on("click", function () {
     isBuy = true;
     $(this).css("background", "green");
