@@ -101,6 +101,8 @@ $(function () {
       else $("#process-btn").text("Sell").append(` ${coinName}`);
 
       updateUI();
+
+      $("#total-value").removeClass("hidden");
     } else {
       console.error("b not found!");
     }
@@ -530,16 +532,17 @@ function updateWalletDisplay() {
     if (amount > 0) {
   
     let marketData = market[currentProfile.currentDay];
-    let coinData = marketData.coins.find(c => c.code === coin.toLowerCase());
+    let coinData = marketData.coins.find(coin => coin.code === c.toLowerCase());
     
     let val = coinData.close * amount;
     totalValue += val;
     
     let coinImage = coins.find(coin => coin.code === c.toLowerCase()).image;
     let coinName = coins.find(coin => coin.code === c.toLowerCase()).name;
+    
 
-     out+= ` <tr>
-     <td><img src = "./images/${coinImage}">${coinName} </td>
+    out+= ` <tr>
+    <td><img src = "./images/${coinImage}">${coinName} </td>
      
 
     
@@ -552,10 +555,12 @@ function updateWalletDisplay() {
 
     
      <td>${coinData.close}</td>
+     
      </tr>
 `
  
     }
+    $("#total-value").text(totalValue.toFixed(2));
   }
   $("#wallet-coins").html(out);
   //$("#wallet-coins").append(out);

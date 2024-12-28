@@ -366,4 +366,10 @@ button {
   
 }
 
-
+#total-value{
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  font-size: 40px;
+  font-weight: bold;
+}
