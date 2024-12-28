@@ -1,6 +1,10 @@
 let profiles = loadProfilesFromStorage();
 console.log(profiles);
 let currentProfile = null;
+ // constants
+ const END_DAY = 365;
+ const YEAR_START = new Date(2021, 0, 1);
+
 $(function () {
   // ----- Initial Page (Team Members) -----
   $("#continue-to-profiles").on("click", function () {
@@ -20,7 +24,7 @@ $(function () {
     else {
       profiles.push({
         name: $("#add-box input").val(),
-        initialMoney: 1000,
+        cash: 1000,
         currentDay: 2,
         coins: {},
         selectedCoin: "BTC",
@@ -53,7 +57,7 @@ $(function () {
                         
                             <button class="rmv-btn">Remove</button>
                             <h3>${profiles[i].name}</h3>
-                            <p>Initial Money: $${profiles[i].initialMoney}</p>
+                            
                         
                     </div>
                </a>
@@ -97,6 +101,8 @@ $(function () {
       else $("#process-btn").text("Sell").append(` ${coinName}`);
 
       updateUI();
+
+      $("#total-value").removeClass("hidden");
     } else {
       console.error("b not found!");
     }
@@ -109,14 +115,13 @@ $(function () {
     $(".bottom-section").addClass("hidden");
     $("#initial-page").css("height", "100vh");
     $(".coin-option").removeClass("selected");
+    clearInterval(timer);
   });
 
   //
   // DAY BUTTONS
   //
-  // constants
-  const END_DAY = 365;
-  const YEAR_START = new Date(2021, 0, 1);
+ 
   console.log(currentProfile);
   // let selectedCoin = "BTC";
   // let coinName = coins.find(coin => coin.code === currentProfile.selectedCoin.toLowerCase()).name;
@@ -130,44 +135,7 @@ $(function () {
     .append(` ${coinName}`);
 
   // date part of the next day button
-  function calculateDateFromDay(day) {
-    const date = new Date(YEAR_START.getTime());
-    date.setDate(date.getDate() + (day - 1)); // adjust for the given day
-    return date.toLocaleDateString("en-US", {
-      day: "numeric",
-      month: "long",
-      year: "numeric",
-    });
-  }
-
-  // function updateUI() {
-  //   $("#current-day").text(currentProfile.currentDay);
-  //   $("#current-date").text(calculateDateFromDay(currentProfile.currentDay));
-
-  //   $(`.coin-option[data-coin="${currentProfile.selectedCoin}"]`).addClass(
-  //     "selected"
-  //   );
-  //   // display the coin name
-
-  //   const candleData = getCandlestickDataForCoin(
-  //     currentProfile.selectedCoin,
-  //     2, // how the last 2 days of data
-  //     currentProfile.currentDay
-  //   );
-  //   renderCandlestickChart(candleData, "#candlestick-chart");
-  // }
-
-  function updateUI() {
-    if (!currentProfile) return;
-    $("#current-day").text(currentProfile.currentDay);
-    $("#current-date").text(calculateDateFromDay(currentProfile.currentDay));
-    $(`.coin-option[data-coin="${currentProfile.selectedCoin}"]`).addClass(
-      "selected"
-    );
-
-    console.log(`Selected coin: ${currentProfile.selectedCoin}`);
-  }
-
+ 
   let candleData;
 
   // it changes to the next day until the end of the sim
@@ -181,7 +149,7 @@ $(function () {
         currentProfile.currentDay
       );
       renderCandlestickChart(candleData, "#candlestick-chart");
-      // // im using this instead of updateUI so it won't get affected by button changes
+      // im using this instead of updateUI so it won't get affected by button changes
       // $("#current-day").text(currentProfile.currentDay);
       // $("#current-date").text(calculateDateFromDay(currentProfile.currentDay));
     } else {
@@ -198,11 +166,12 @@ $(function () {
     ).name;
     //console.log(coinName);
     $(".coin-option").removeClass("selected");
+    $("#amount").val("");
+    $("#amount-value").html(`= $`);
     $(this).addClass("selected");
 
     $("#selected-coin-name").text(coinName);
     // update the new coin name
-    // $("#selected-coin-name").text(coinFullName(selectedCoin));
 
     //console.log(`Selected coin updated to: ${selectedCoin}`);
 
@@ -212,7 +181,6 @@ $(function () {
       $("#process-btn").text("Sell").append(` ${coinName}`);
     }
 
-    console.log(`Selected coin updated to: ${currentProfile.selectedCoin}`);
     // $(".coin-option").removeClass("selected");
     // put the ring selection to the new coin
     $(`.coin-option[data-coin="${currentProfile.selectedCoin}"]`).addClass(
@@ -225,15 +193,15 @@ $(function () {
   //
   //
 
-  // 1) Basic chartstick rendering function
+
   function renderCandlestickChart(candles, containerSelector) {
     const $chart = $(containerSelector);
     const chartEl = $chart[0];
   
-    // Clear previous chart elements
+    //clear previous chart elements
     $chart.empty();
   
-    // 1) Get min and max prices for scaling
+
     let allPrices = [];
     candles.forEach((c) => {
       allPrices.push(c.low, c.high, c.open, c.close);
@@ -244,20 +212,18 @@ $(function () {
     let padding = 15;
     let chartHeight = $chart.height();
   
-    // 2) A price -> Y-position scaling function
     function priceToY(price) {
       let ratio = (price - minP) / (maxP - minP);
       let scaled = ratio * (chartHeight - 2 * padding);
       return chartHeight - padding - scaled;
     }
   
-    // Alternate scale function
+    // alternate scale function
     let scale = (val) => {
       return ((val - minP) / (maxP - minP)) * (chartHeight - 20) + 10;
     };
   
-    // 3) Draw each candle
-    let xPos = 0; // start from left
+    let xPos = 5; 
     candles.forEach((c) => {
       let yOpen = scale(c.open);
       let yClose = scale(c.close);
@@ -293,27 +259,28 @@ $(function () {
 
         .data("candle", c);
   
-      // Append to the candle container
+
       $candle.append($stick).append($bar);
   
-      // Append the candle to the chart
+
       $chart.append($candle);
   
-      // Increase xPos so next candle doesn't overlap
+      // increase xPos so next candle doesn't overlap
       xPos += $chart.width() / 120;
     });
   
-    // 4) Draw last-close line
+
     let lastClose = candles[candles.length - 1].close;
     let lastCloseY = priceToY(lastClose);
     
-    // Adjust the Y-coordinate if necessary
-    let adjustedLastCloseY = lastCloseY; // Adjust this value as needed
+
+    let adjustedLastCloseY = lastCloseY; 
     
     let $lastClose = $("<div class='last-close-line'></div>").css({
       top: adjustedLastCloseY + "px",
     });
     $chart.append($lastClose);
+
     
     // 5) Tooltip logic (hover)
     let $tooltip = $("<div class='tooltip hidden'></div>");
@@ -340,21 +307,22 @@ $(function () {
       });
     });
     
+
     $chart.on("mouseleave", ".stick,.bar", function () {
       $tooltip.addClass("hidden");
     });
   }
 
   function getCandlestickDataForCoin(coinCode, dayRange, currentDay) {
-    // Ensure currentDay is within range
+
     if (currentDay < dayRange) {
-      dayRange = currentDay; // Adjust to avoid fetching unavailable days
+      dayRange = currentDay; 
     }
 
-    // Filter data for the specified range of days
+
     const filteredDays = market.slice(currentDay - dayRange, currentDay);
 
-    // Map the data to extract candlestick information for the selected coin
+
     const coinData = filteredDays.map((day) => {
       const coinInfo = day.coins.find(
         (coin) => coin.code === coinCode.toLowerCase()
@@ -371,7 +339,7 @@ $(function () {
   }
 
   $(".coin-option").on("click", function () {
-    currentProfile.selectedCoin = $(this).data("coin"); // Update the selected coin
+    currentProfile.selectedCoin = $(this).data("coin"); //update the selected coin
     candleData = getCandlestickDataForCoin(
       currentProfile.selectedCoin,
       120,
@@ -381,7 +349,7 @@ $(function () {
   });
 
   //updateUI();
-
+ 
   $("#buy-btn").on("click", function () {
     isBuy = true;
     $(this).css("background", "green");
@@ -391,6 +359,8 @@ $(function () {
       .css("background", "green")
       .text("Buy")
       .append(` ${coinName}`);
+
+  
   });
 
   $("#sell-btn").on("click", function () {
@@ -402,6 +372,7 @@ $(function () {
       .css("background", "red")
       .text("Sell")
       .append(` ${coinName}`);
+    
   });
 
   let timer;
@@ -435,6 +406,179 @@ $(function () {
     $("#play-btn").attr("disabled", false);
     clearInterval(timer);
   });
+
+  $("#process-btn").on("click", function () {
+    if (isBuy) {
+      buyCoins();
+    } else {
+      sellCoins();
+    }
+
+    $("#amount").val("");
+    $("#amount-value").html(`= $`);
+
+  });
+      
+});
+
+function calculateDateFromDay(day) {
+  const date = new Date(YEAR_START.getTime());
+  date.setDate(date.getDate() + (day - 1)); // adjust for the given day
+  return date.toLocaleDateString("en-US", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
+}
+
+
+function updateUI() {
+  if (!currentProfile) return;
+  $("#current-day").text(currentProfile.currentDay);
+  $("#current-date").text(calculateDateFromDay(currentProfile.currentDay));
+  $(`.coin-option[data-coin="${currentProfile.selectedCoin}"]`).addClass(
+    "selected"
+  );
+
+  updateWalletDisplay();
+  $(".dolar").html(`
+    
+    <td>Dollar</td>
+    
+    <td><b>${currentProfile.cash}</b></td>
+    
+    <td></td>
+    <td></td>
+    `
+)
+
+  console.log(`Selected coin: ${currentProfile.selectedCoin}`);
+}
+
+function buyCoins() {
+  let coinAmount = parseFloat($("#amount").val());
+  if (isNaN(coinAmount) || coinAmount <= 0) {
+    alert("Enter a valid amount of coins");
+    return;
+  }
+  let coin = currentProfile.selectedCoin;
+  let marketData = market[currentProfile.currentDay];
+  let coinData = marketData.coins.find(c => c.code === coin.toLowerCase());
+  
+  console.log(coinData.close);
+
+  if (!coinData) return;
+  let price = coinData.close;
+  let cost = coinAmount * price;
+  if (cost <= currentProfile.cash) {
+    currentProfile.cash -= cost;
+    currentProfile.coins[coin] = (currentProfile.coins[coin] || 0) + coinAmount;
+    updateUI();
+    saveProfiles();
+    updateWalletDisplay();
+  } else {
+    alert("Not enough cash to buy");
+  }
+}
+
+function sellCoins() {
+  let coinAmount = parseFloat($("#amount").val());
+  if (isNaN(coinAmount) || coinAmount <= 0) {
+    alert("Enter a valid amount of coins");
+    return;
+  }
+  let coin = currentProfile.selectedCoin;
+  let marketData = market[currentProfile.currentDay];
+  let coinData = marketData.coins.find(c => c.code === coin.toLowerCase());
+
+  let price = coinData.close;
+  let revenue = coinAmount * price;
+  let hodl = currentProfile.coins[coin] || 0;
+  if (coinAmount <= hodl) {
+    currentProfile.cash += revenue;
+    currentProfile.coins[coin] = hodl - coinAmount;
+    updateUI();
+    saveProfiles();
+    updateWalletDisplay();
+  } else {
+    alert("Not enough coins to sell");
+  }
+}
+
+let out = "";
+function updateWalletDisplay() {
+  out = "";
+  let totalValue = currentProfile.cash;
+  let coin = currentProfile.selectedCoin;
+  $("#wallet-coins").empty();
+  $(".dolar").empty();
+ 
+  
+  $(".dolar").html(`
+    
+    <td>Dollar</td>
+    
+    <td><b>${currentProfile.cash}</b></td>
+    
+    <td></td>
+    <td></td>
+    `
+)
+
+  for (let c in currentProfile.coins) {
+    let amount = currentProfile.coins[c];
+    if (amount > 0) {
+  
+    let marketData = market[currentProfile.currentDay];
+    let coinData = marketData.coins.find(coin => coin.code === c.toLowerCase());
+    
+    let val = coinData.close * amount;
+    totalValue += val;
+    
+    let coinImage = coins.find(coin => coin.code === c.toLowerCase()).image;
+    let coinName = coins.find(coin => coin.code === c.toLowerCase()).name;
+    
+    
+    // $("#amount-value").empty();
+
+    $("#amount").on("change", function () {
+      let c = market[currentProfile.currentDay].coins.find(coin => coin.code === currentProfile.selectedCoin.toLowerCase());
+      console.log(coinData)
+      $("#amount-value").html(`= $${$("#amount").val() * c.close}`);
+    });
+
+  
+    out+= ` <tr>
+    <td class='coin-in-wallet'><img src = "./images/${coinImage}">${coinName} </td>
+     
+
+    
+    <td>${amount}</td>
+    
+
+   
+    <td>${val}</td>
+    
+
+    
+     <td>${coinData.close}</td>
+     
+     </tr>
+`
+ 
+    }
+    $("#total-value").text("$" + totalValue.toFixed(2));
+  }
+  $("#wallet-coins").html(out);
+  //$("#wallet-coins").append(out);
+  // $walletCash.text(currentProfile.cash.toFixed(2));
+  // $walletTotal.text(totalValue.toFixed(2));
+}
+
+$("#amount").on("change", function () {
+  let c = market[currentProfile.currentDay].coins.find(coin => coin.code === currentProfile.selectedCoin.toLowerCase());
+  console.log(coinData)
+  $("#amount-value").html(`= $${$("#amount").val() * c.close}`);
 });
 
 function saveProfiles() {
@@ -446,3 +590,12 @@ function loadProfilesFromStorage() {
   let data = localStorage.getItem("profiles");
   return data ? JSON.parse(data) : [];
 }
+
+// function endSimulation() {
+//   $(".trading-panel").addClass("hidden");
+//   $("#total-value").animate({
+//     opacity: 0
+//     }, 2000, function() {
+//     alert("Simulation has ended. Your final portfolio value is $" + $("#total-value").text());
+//     });
+// }
