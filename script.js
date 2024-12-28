@@ -371,6 +371,8 @@ $(function () {
       .css("background", "green")
       .text("Buy")
       .append(` ${coinName}`);
+
+  
   });
 
   $("#sell-btn").on("click", function () {
@@ -382,6 +384,7 @@ $(function () {
       .css("background", "red")
       .text("Sell")
       .append(` ${coinName}`);
+    
   });
 
   let timer;
@@ -422,6 +425,10 @@ $(function () {
     } else {
       sellCoins();
     }
+
+    $("#amount").val("");
+    $("#amount-value").html(`= $`);
+
   });
       
 });
@@ -544,7 +551,7 @@ function updateWalletDisplay() {
     let coinName = coins.find(coin => coin.code === c.toLowerCase()).name;
     
     
-    $("#amount-value").empty();
+    // $("#amount-value").empty();
 
     $("#amount").on("change", function () {
       let c = market[currentProfile.currentDay].coins.find(coin => coin.code === currentProfile.selectedCoin.toLowerCase());
@@ -580,6 +587,11 @@ function updateWalletDisplay() {
   // $walletTotal.text(totalValue.toFixed(2));
 }
 
+$("#amount").on("change", function () {
+  let c = market[currentProfile.currentDay].coins.find(coin => coin.code === currentProfile.selectedCoin.toLowerCase());
+  console.log(coinData)
+  $("#amount-value").html(`= $${$("#amount").val() * c.close}`);
+});
 
 function saveProfiles() {
   localStorage.setItem("profiles", JSON.stringify(profiles));
@@ -590,3 +602,12 @@ function loadProfilesFromStorage() {
   let data = localStorage.getItem("profiles");
   return data ? JSON.parse(data) : [];
 }
+
+// function endSimulation() {
+//   $(".trading-panel").addClass("hidden");
+//   $("#total-value").animate({
+//     opacity: 0
+//     }, 2000, function() {
+//     alert("Simulation has ended. Your final portfolio value is $" + $("#total-value").text());
+//     });
+// }
