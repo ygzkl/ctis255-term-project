@@ -1,6 +1,10 @@
 let profiles = loadProfilesFromStorage();
 console.log(profiles);
 let currentProfile = null;
+ // constants
+ const END_DAY = 365;
+ const YEAR_START = new Date(2021, 0, 1);
+
 $(function () {
   // ----- Initial Page (Team Members) -----
   $("#continue-to-profiles").on("click", function () {
@@ -20,7 +24,7 @@ $(function () {
     else {
       profiles.push({
         name: $("#add-box input").val(),
-        initialMoney: 1000,
+        cash: 1000,
         currentDay: 2,
         coins: {},
         selectedCoin: "BTC",
@@ -53,7 +57,7 @@ $(function () {
                         
                             <button class="rmv-btn">Remove</button>
                             <h3>${profiles[i].name}</h3>
-                            <p>Initial Money: $${profiles[i].initialMoney}</p>
+                            
                         
                     </div>
                </a>
@@ -114,9 +118,7 @@ $(function () {
   //
   // DAY BUTTONS
   //
-  // constants
-  const END_DAY = 365;
-  const YEAR_START = new Date(2021, 0, 1);
+ 
   console.log(currentProfile);
   // let selectedCoin = "BTC";
   // let coinName = coins.find(coin => coin.code === currentProfile.selectedCoin.toLowerCase()).name;
@@ -130,15 +132,7 @@ $(function () {
     .append(` ${coinName}`);
 
   // date part of the next day button
-  function calculateDateFromDay(day) {
-    const date = new Date(YEAR_START.getTime());
-    date.setDate(date.getDate() + (day - 1)); // adjust for the given day
-    return date.toLocaleDateString("en-US", {
-      day: "numeric",
-      month: "long",
-      year: "numeric",
-    });
-  }
+ 
 
   // function updateUI() {
   //   $("#current-day").text(currentProfile.currentDay);
@@ -156,18 +150,6 @@ $(function () {
   //   );
   //   renderCandlestickChart(candleData, "#candlestick-chart");
   // }
-
-  function updateUI() {
-    if (!currentProfile) return;
-    $("#current-day").text(currentProfile.currentDay);
-    $("#current-date").text(calculateDateFromDay(currentProfile.currentDay));
-    $(`.coin-option[data-coin="${currentProfile.selectedCoin}"]`).addClass(
-      "selected"
-    );
-
-    console.log(`Selected coin: ${currentProfile.selectedCoin}`);
-  }
-
   let candleData;
 
   // it changes to the next day until the end of the sim
@@ -212,7 +194,6 @@ $(function () {
       $("#process-btn").text("Sell").append(` ${coinName}`);
     }
 
-    console.log(`Selected coin updated to: ${currentProfile.selectedCoin}`);
     // $(".coin-option").removeClass("selected");
     // put the ring selection to the new coin
     $(`.coin-option[data-coin="${currentProfile.selectedCoin}"]`).addClass(
@@ -307,36 +288,36 @@ $(function () {
     // .text(lastCandle.close.toFixed(2))
     $chart.append($lastClose);
 
-    // // 5) Tooltip logic (hover)
-    // let $tooltip = $("<div class='tooltip hidden'></div>");
-    // $chart.append($tooltip);
+    // 5) Tooltip logic (hover)
+    let $tooltip = $("<div class='tooltip hidden'></div>");
+    $chart.append($tooltip);
 
-    // $chart.off("mousemove", ".stick,.bar");
-    // $chart.off("mouseleave", ".stick,.bar");
+    $chart.off("mousemove", ".stick,.bar");
+    $chart.off("mouseleave", ".stick,.bar");
 
-    // $chart.on("mousemove", ".stick,.bar", function (e) {
-    //   let cData = $(this).data("candle");
-    //   if (!cData) return;
+    $chart.on("mousemove", ".stick,.bar", function (e) {
+      let cData = $(this).data("candle");
+      if (!cData) return;
 
-    //   $tooltip.html(`
-    //     O: ${cData.open}<br/>
-    //     H: ${cData.high}<br/>
-    //     L: ${cData.low}<br/>
-    //     C: ${cData.close}
-    //   `);
+      $tooltip.html(`
+      O: ${cData.open}<br/>
+      H: ${cData.high}<br/>
+      L: ${cData.low}<br/>
+      C: ${cData.close}
+      `);
 
-    //   $tooltip.removeClass("hidden");
+      $tooltip.removeClass("hidden");
 
-    //   let offset = $chart.offset();
-    //   $tooltip.css({
-    //     left: e.pageX - offset.left + 10 + "px",
-    //     top: e.pageY - offset.top + 10 + "px",
-    //   });
-    // });
+      let offset = $chart.offset();
+      $tooltip.css({
+      left: e.pageX - offset.left + 10 + "px",
+      top: e.pageY - offset.top + 10 + "px",
+      });
+    });
 
-    // $chart.on("mouseleave", ".stick,.bar", function () {
-    //   $tooltip.addClass("hidden");
-    // });
+    $chart.on("mouseleave", ".stick,.bar", function () {
+      $tooltip.addClass("hidden");
+    });
   }
 
   function getCandlestickDataForCoin(coinCode, dayRange, currentDay) {
@@ -440,6 +421,27 @@ $(function () {
       
 });
 
+function calculateDateFromDay(day) {
+  const date = new Date(YEAR_START.getTime());
+  date.setDate(date.getDate() + (day - 1)); // adjust for the given day
+  return date.toLocaleDateString("en-US", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
+}
+
+
+function updateUI() {
+  if (!currentProfile) return;
+  $("#current-day").text(currentProfile.currentDay);
+  $("#current-date").text(calculateDateFromDay(currentProfile.currentDay));
+  $(`.coin-option[data-coin="${currentProfile.selectedCoin}"]`).addClass(
+    "selected"
+  );
+
+  console.log(`Selected coin: ${currentProfile.selectedCoin}`);
+}
 
 function buyCoins() {
   let coinAmount = parseFloat($("#amount").val());
@@ -493,14 +495,14 @@ function sellCoins() {
 
 function updateWalletDisplay() {
   let totalValue = currentProfile.cash;
-  $walletCoins.empty();
+  $("wallet-coins").empty();
   for (let c in currentProfile.coins) {
     let amount = currentProfile.coins[c];
     if (amount > 0) {
   let lastData = getDayData(c, currentProfile.currentDay);
   let val = lastData.close * amount;
   totalValue += val;
-  $walletCoins.append(`<li>${c}: ${amount} (Value: $${val.toFixed(2)})</li>`);
+  $("wallet-coins").append(`<li>${c}: ${amount} (Value: $${val.toFixed(2)})</li>`);
     }
   }
   $walletCash.text(currentProfile.cash.toFixed(2));
