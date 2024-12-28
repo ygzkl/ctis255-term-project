@@ -115,6 +115,7 @@ $(function () {
     $(".bottom-section").addClass("hidden");
     $("#initial-page").css("height", "100vh");
     $(".coin-option").removeClass("selected");
+    clearInterval(timer);
   });
 
   //
