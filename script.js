@@ -25,7 +25,7 @@ $(function () {
       profiles.push({
         name: $("#add-box input").val(),
         cash: 1000,
-        currentDay: 2,
+        currentDay: 1,
         coins: {},
         selectedCoin: "BTC",
       });
@@ -101,6 +101,8 @@ $(function () {
       else $("#process-btn").text("Sell").append(` ${coinName}`);
 
       updateUI();
+
+      $("#total-value").removeClass("hidden");
     } else {
       console.error("b not found!");
     }
@@ -440,6 +442,18 @@ function updateUI() {
     "selected"
   );
 
+  updateWalletDisplay();
+  $(".dolar").html(`
+    
+    <td>Dollar</td>
+    
+    <td><b>${currentProfile.cash}</b></td>
+    
+    <td></td>
+    <td></td>
+    `
+)
+
   console.log(`Selected coin: ${currentProfile.selectedCoin}`);
 }
 
@@ -450,7 +464,7 @@ function buyCoins() {
     return;
   }
   let coin = currentProfile.selectedCoin;
-  let marketData = market[currentProfile.currentDay - 1];
+  let marketData = market[currentProfile.currentDay];
   let coinData = marketData.coins.find(c => c.code === coin.toLowerCase());
   
   console.log(coinData.close);
@@ -476,7 +490,7 @@ function sellCoins() {
     return;
   }
   let coin = currentProfile.selectedCoin;
-  let marketData = market[currentProfile.currentDay - 1];
+  let marketData = market[currentProfile.currentDay];
   let coinData = marketData.coins.find(c => c.code === coin.toLowerCase());
 
   let price = coinData.close;
@@ -493,20 +507,65 @@ function sellCoins() {
   }
 }
 
+let out = "";
 function updateWalletDisplay() {
+  out = "";
   let totalValue = currentProfile.cash;
-  $("wallet-coins").empty();
+  let coin = currentProfile.selectedCoin;
+  $("#wallet-coins").empty();
+  $(".dolar").empty();
+ 
+  
+  $(".dolar").html(`
+    
+    <td>Dollar</td>
+    
+    <td><b>${currentProfile.cash}</b></td>
+    
+    <td></td>
+    <td></td>
+    `
+)
+
   for (let c in currentProfile.coins) {
     let amount = currentProfile.coins[c];
     if (amount > 0) {
-  let lastData = getDayData(c, currentProfile.currentDay);
-  let val = lastData.close * amount;
-  totalValue += val;
-  $("wallet-coins").append(`<li>${c}: ${amount} (Value: $${val.toFixed(2)})</li>`);
+  
+    let marketData = market[currentProfile.currentDay];
+    let coinData = marketData.coins.find(coin => coin.code === c.toLowerCase());
+    
+    let val = coinData.close * amount;
+    totalValue += val;
+    
+    let coinImage = coins.find(coin => coin.code === c.toLowerCase()).image;
+    let coinName = coins.find(coin => coin.code === c.toLowerCase()).name;
+    
+
+    out+= ` <tr>
+    <td><img src = "./images/${coinImage}">${coinName} </td>
+     
+
+    
+    <td>${amount}</td>
+    
+
+   
+    <td>${val}</td>
+    
+
+    
+     <td>${coinData.close}</td>
+     
+     </tr>
+`
+ 
     }
+    $("#total-value").text(totalValue.toFixed(2));
   }
-  $walletCash.text(currentProfile.cash.toFixed(2));
-  $walletTotal.text(totalValue.toFixed(2));
+  $("#wallet-coins").html(out);
+  //$("#wallet-coins").append(out);
+  // $walletCash.text(currentProfile.cash.toFixed(2));
+  // $walletTotal.text(totalValue.toFixed(2));
 }
 
 
